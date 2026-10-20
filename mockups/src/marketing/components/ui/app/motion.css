@@ -1,0 +1,180 @@
+/*
+ * Simulated interaction for the app mockups.
+ *
+ * Every mockup plays one short loop (SIM_LOOP in motion.ts): a finger taps, the app answers, the
+ * screen holds the result, then quietly resets. Each keyframe set below is one beat of that loop at
+ * fixed percentages, so beats in different components stay in step without any JavaScript.
+ *
+ * Phase A lands at about 30% of the loop, phase B at about 55%. Every set ends where it began, so
+ * the loop is seamless, and under prefers-reduced-motion (which collapses animations to a single
+ * instant iteration in marketing.css and takes.css) each element simply shows its resting state.
+ *
+ * Global on purpose: @keyframes cannot be scoped, and the bd-sim- prefix cannot collide.
+ */
+
+/* A fingertip: a soft disc that lands, presses and fades. */
+@keyframes bd-sim-tap-a {
+  0%, 17% { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  20% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+  26% { opacity: 0.55; transform: translate(-50%, -50%) scale(1.15); }
+  31%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.35); }
+}
+@keyframes bd-sim-tap-b {
+  0%, 44% { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  47% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+  53% { opacity: 0.55; transform: translate(-50%, -50%) scale(1.15); }
+  58%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.35); }
+}
+
+/* The control under the finger dips. */
+@keyframes bd-sim-press-a {
+  0%, 18% { transform: scale(1); }
+  22% { transform: scale(0.95); }
+  27%, 100% { transform: scale(1); }
+}
+@keyframes bd-sim-press-b {
+  0%, 45% { transform: scale(1); }
+  49% { transform: scale(0.95); }
+  54%, 100% { transform: scale(1); }
+}
+
+/* Something appears with a small overshoot, holds, then leaves before the loop restarts. */
+@keyframes bd-sim-in-a {
+  0%, 29% { opacity: 0; transform: scale(0.6); }
+  34% { opacity: 1; transform: scale(1.15); }
+  38%, 88% { opacity: 1; transform: scale(1); }
+  94%, 100% { opacity: 0; transform: scale(1); }
+}
+@keyframes bd-sim-in-b {
+  0%, 55% { opacity: 0; transform: scale(0.6); }
+  60% { opacity: 1; transform: scale(1.15); }
+  64%, 88% { opacity: 1; transform: scale(1); }
+  94%, 100% { opacity: 0; transform: scale(1); }
+}
+@keyframes bd-sim-out-a {
+  0%, 29% { opacity: 1; }
+  34%, 88% { opacity: 0; }
+  94%, 100% { opacity: 1; }
+}
+@keyframes bd-sim-out-b {
+  0%, 55% { opacity: 1; }
+  60%, 88% { opacity: 0; }
+  94%, 100% { opacity: 1; }
+}
+
+/* Odometer swap for a changing number: the old value rises out, the new one rises in. */
+@keyframes bd-sim-rise-out {
+  0%, 29% { opacity: 1; transform: translateY(0); }
+  36%, 88% { opacity: 0; transform: translateY(-60%); }
+  94%, 100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes bd-sim-rise-in {
+  0%, 29% { opacity: 0; transform: translateY(60%); }
+  36%, 88% { opacity: 1; transform: translateY(0); }
+  94%, 100% { opacity: 0; transform: translateY(0); }
+}
+@keyframes bd-sim-rise-out-b {
+  0%, 55% { opacity: 1; transform: translateY(0); }
+  62%, 88% { opacity: 0; transform: translateY(-60%); }
+  94%, 100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes bd-sim-rise-in-b {
+  0%, 55% { opacity: 0; transform: translateY(60%); }
+  62%, 88% { opacity: 1; transform: translateY(0); }
+  94%, 100% { opacity: 0; transform: translateY(0); }
+}
+
+/* A completed goal: its text fades back and a line strikes through it. */
+@keyframes bd-sim-dim {
+  0%, 32% { opacity: 1; }
+  38%, 88% { opacity: 0.5; }
+  94%, 100% { opacity: 1; }
+}
+@keyframes bd-sim-strike {
+  0%, 32% { transform: scaleX(0); }
+  40%, 88% { transform: scaleX(1); }
+  94%, 100% { transform: scaleX(0); }
+}
+
+/* A bar filling from --bd-sim-from (a 0-1 scale) to full width. */
+@keyframes bd-sim-fill {
+  0%, 32% { transform: scaleX(var(--bd-sim-from, 0)); }
+  46%, 88% { transform: scaleX(1); }
+  94%, 100% { transform: scaleX(var(--bd-sim-from, 0)); }
+}
+
+/* A new row opening in a list. */
+@keyframes bd-sim-expand {
+  0%, 30% { max-height: 0; opacity: 0; }
+  38%, 88% { max-height: 96px; opacity: 1; }
+  94%, 100% { max-height: 0; opacity: 0; }
+}
+
+/* A quick bump, for a badge or an icon that was just touched. */
+@keyframes bd-sim-pop-b {
+  0%, 48% { transform: scale(1); }
+  52% { transform: scale(1.35); }
+  57%, 100% { transform: scale(1); }
+}
+
+/* Hearts drifting up from a like. */
+@keyframes bd-sim-float {
+  0%, 48% { opacity: 0; transform: translateY(0) scale(0.6); }
+  53% { opacity: 1; }
+  78%, 100% { opacity: 0; transform: translateY(-180px) scale(1.1); }
+}
+
+/* Slow push-in on full-bleed media. */
+@keyframes bd-sim-zoom {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* "Typing…" before a message arrives, and the dots inside it. */
+@keyframes bd-sim-typing {
+  0%, 4% { opacity: 0; }
+  8%, 24% { opacity: 1; }
+  28%, 100% { opacity: 0; }
+}
+@keyframes bd-sim-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+@keyframes bd-sim-message {
+  0%, 26% { opacity: 0; transform: translateY(8px); }
+  32%, 90% { opacity: 1; transform: translateY(0); }
+  96%, 100% { opacity: 0; transform: translateY(0); }
+}
+
+/* One highlight stepping through a row of chips, a chip at a time. */
+/* Resting colours are explicit, not `inherit`: inherit resolves against the page, and on a light
+   page that painted dark text on the dark chips. */
+@keyframes bd-sim-spotlight {
+  0%, 14%, 100% { background-color: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.2); color: #e0e0e0; }
+  2%, 12% { background-color: #ffde59; border-color: #ffde59; color: #000000; }
+}
+
+/* A single fingertip, played once each time the hero tour mounts it (see GoalTour.tsx). */
+@keyframes bd-sim-tap-once {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  30% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+  70% { opacity: 0.55; transform: translate(-50%, -50%) scale(1.15); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.35); }
+}
+
+/* Something new on a hero-tour screen: a short fade and rise. */
+@keyframes bd-tour-arrive {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* The text caret in the tour's new-goal field. */
+@keyframes bd-tour-caret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Typing dots used outside Moments. */
+.bd-sim-dot {
+  animation: bd-sim-dot 1s ease-in-out infinite;
+}

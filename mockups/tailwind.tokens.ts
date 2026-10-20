@@ -2,7 +2,7 @@ import type { CustomThemeConfig } from "tailwindcss/types/config";
 
 /**
  * The `bd-*` design tokens used by the marketing mockups, copied from the source repo's
- * tailwind.config.ts (theme.extend, bd-* entries only). Spread into `theme.extend`.
+ * tailwind.config.ts on `develop` (theme.extend, bd-* entries only). Spread into `theme.extend`.
  */
 export const bdTokens: Partial<CustomThemeConfig> = {
   fontFamily: {
@@ -24,6 +24,12 @@ export const bdTokens: Partial<CustomThemeConfig> = {
       "text-tertiary": "#999999",
       yellow: "#FFDE59",
       "yellow-dim": "rgba(255, 222, 89, 0.14)",
+      /* Light-ground tokens used by the live (Daylight) marketing page. */
+      ink: "#0D0D0D",
+      "ink-soft": "#4A4A4A",
+      "ink-muted": "#6B6B6B",
+      paper: "#F4F4F2",
+      "paper-2": "#FFFFFF",
     },
   },
   borderRadius: {
