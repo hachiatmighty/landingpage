@@ -54,7 +54,7 @@ const ANSWERED = { ...COACHED, circleReplied: true };
 
 /*
  * The script: a new member's first minute, in the order the app takes them through it. The Goals
- * tab is empty, so they tap "Add Q3 goals", write the goal, pick who sees it from their Circle and
+ * tab is empty, so they tap "Add Q4 goals", write the goal, pick who sees it from their Circle and
  * which AI coach checks in, and save. The app offers to share the new goal. Back on Goals they open
  * it, set its progress on the slider, and post a comment, which the AI coach and a Circle member
  * both answer. Each step lists only what differs from the start of the loop, so it reads as the
@@ -62,7 +62,7 @@ const ANSWERED = { ...COACHED, circleReplied: true };
  */
 const STEPS: Step[] = [
   { ms: 2600, screen: "goals" },
-  { ms: 650, screen: "goals", tap: { text: "Add Q3 goals" } },
+  { ms: 650, screen: "goals", tap: { text: "Add Q4 goals" } },
   { ms: 1100, screen: "goals", form: { open: true } },
   { ms: 500, screen: "goals", form: { open: true, typed: 7 } },
   { ms: 500, screen: "goals", form: { open: true, typed: 14 } },

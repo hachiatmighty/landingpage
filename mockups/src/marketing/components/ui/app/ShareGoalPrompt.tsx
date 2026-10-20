@@ -20,7 +20,7 @@ const INK = "#111111";
 
 const NAME = "Sade Okoye";
 const NAME_SIZE = 68;
-const STAGE_LINE = "is starting a Q3 2026 goal";
+const STAGE_LINE = "is starting a Q4 2026 goal";
 /** layoutGoalText("Run a half marathon"): 96pt Urbanist Bold breaks after the third word. */
 const GOAL = { fontSize: 96, lines: ["Run a half", "marathon"] };
 

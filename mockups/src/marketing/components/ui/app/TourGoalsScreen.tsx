@@ -21,7 +21,7 @@ const arrive = { animation: "bd-tour-arrive 0.55s cubic-bezier(.2,.8,.2,1) both"
 
 /**
  * screens/Main/Goals.tsx for a member with no goals in the period: the same header and period
- * switcher, a "Focus for Q3" line at 0/0, and one tappable row that opens New goal. Once the tour
+ * switcher, a "Focus for Q4" line at 0/0, and one tappable row that opens New goal. Once the tour
  * has saved a goal the row is replaced by that goal, exactly as the app swaps them.
  */
 export function TourGoalsScreen({ state }: { state: TourGoalsState }) {
@@ -35,7 +35,7 @@ export function TourGoalsScreen({ state }: { state: TourGoalsState }) {
         <PeriodSwitcher />
 
         <V style={{ marginBottom: 8, ...row, justifyContent: "space-between", gap: 12, minHeight: 44 }}>
-          <T style={{ ...Fonts.textRegular, ...Fonts.textBold }}>Focus for Q3</T>
+          <T style={{ ...Fonts.textRegular, ...Fonts.textBold }}>Focus for Q4</T>
           <V style={row}>
             <V style={{ width: 60, height: 4, background: C.surfaceHighlight, borderRadius: 2 }} />
             <T style={{ ...Fonts.textTiny, color: C.onSurfaceMuted, marginLeft: 8 }}>0/{hasGoal ? 1 : 0}</T>
@@ -50,7 +50,7 @@ export function TourGoalsScreen({ state }: { state: TourGoalsState }) {
           <V style={{ background: C.surfaceInput, borderRadius: 16, overflow: "hidden" }}>
             <V style={{ ...row, justifyContent: "center", paddingBlock: 24, paddingInline: 16 }}>
               <Plus size={24} color={C.primary} />
-              <T style={{ ...Fonts.textSmall, color: C.primary, marginLeft: 12 }}>Add Q3 goals</T>
+              <T style={{ ...Fonts.textSmall, color: C.primary, marginLeft: 12 }}>Add Q4 goals</T>
             </V>
           </V>
         )}

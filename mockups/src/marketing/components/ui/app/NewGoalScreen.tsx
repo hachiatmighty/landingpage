@@ -46,7 +46,7 @@ export interface NewGoalState {
 }
 
 /**
- * screens/Main/AddGoal.tsx, the manual form: a Q3 key result or a yearly goal, the goal written
+ * screens/Main/AddGoal.tsx, the manual form: a Q4 key result or a yearly goal, the goal written
  * inline, then due date, ownership, the Circle it is shared with and the AI coaches that check in
  * on it, with Save goal pinned underneath. It opens as a full-screen modal from Goals.
  */
@@ -81,13 +81,13 @@ export function NewGoalScreen({ open, typed, scroll, circle, coaches, pressSave 
       <V style={{ flex: 1, overflow: "hidden" }}>
         <V style={{ paddingInline: GUTTER, paddingTop: 20, paddingBottom: 32, transform: `translateY(${-scroll}px)`, transition: `transform 0.7s ${EASE}` }}>
           <V style={{ flexDirection: "row", padding: 4, borderRadius: 12, background: C.surfaceInput }}>
-            {["Q3 key result", "2026 goal"].map((label, i) => (
+            {["Q4 key result", "2026 goal"].map((label, i) => (
               <V key={label} style={{ flex: 1, minHeight: 40, borderRadius: 9, alignItems: "center", justifyContent: "center", background: i === 0 ? C.primary : undefined }}>
                 <T style={{ ...urbanist(600), fontSize: 15, color: i === 0 ? C.onPrimary : C.onSurfaceMuted }}>{label}</T>
               </V>
             ))}
           </V>
-          <T style={caption}>0 goals in Q3</T>
+          <T style={caption}>0 goals in Q4</T>
 
           <V style={{ ...row, alignItems: "flex-start", marginTop: 24, minHeight: 62, gap: 2 }}>
             {text ? (
@@ -98,7 +98,7 @@ export function NewGoalScreen({ open, typed, scroll, circle, coaches, pressSave 
             ) : (
               <>
                 {open && caret}
-                <T style={{ ...titleStyle, color: C.onSurfaceMuted }}>What will you deliver in Q3?</T>
+                <T style={{ ...titleStyle, color: C.onSurfaceMuted }}>What will you deliver in Q4?</T>
               </>
             )}
           </V>

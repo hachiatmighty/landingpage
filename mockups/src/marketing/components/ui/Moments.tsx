@@ -123,7 +123,7 @@ function ProgressCard() {
       <span className="relative self-start text-[7px] font-bold text-bd-yellow">Bestday</span>
       <img src={MEMBERS[1].src} alt="" className="relative mt-bd-4 h-6 w-6 rounded-full object-cover ring-2 ring-bd-yellow" />
       <span className="relative mt-bd-4 text-[7px] font-bold text-white">Maya Bell</span>
-      <span className="relative text-[6px] font-semibold text-bd-yellow">is pursuing a Q3 goal</span>
+      <span className="relative text-[6px] font-semibold text-bd-yellow">is pursuing a Q4 goal</span>
       <span className="relative mt-bd-4 text-center text-[7px] font-bold leading-tight text-white">Run a half marathon</span>
       <svg viewBox="0 0 64 64" className="relative mt-auto h-12 w-12" aria-hidden="true">
         <circle cx="32" cy="32" r={radius} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="6" />

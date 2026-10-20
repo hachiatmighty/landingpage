@@ -125,7 +125,7 @@ export function GoalDetailScreen({ state }: { state: GoalDetailState }) {
       {/* hero */}
       <V style={{ paddingInline: GUTTER, paddingTop: 8, paddingBottom: 4, borderBottom: `${HAIRLINE}px solid ${C.borderSubtle}` }}>
         <V style={{ ...row, minHeight: 24, marginBottom: 10 }}>
-          <T style={{ ...urbanist(600), fontSize: 14, color: C.onSurfaceMuted }}>2026 Q3</T>
+          <T style={{ ...urbanist(600), fontSize: 14, color: C.onSurfaceMuted }}>2026 Q4</T>
         </V>
         <T style={{ ...urbanist(700), fontSize: 26, lineHeight: "32px", color: C.onSurface }}>Run a half marathon</T>
         <T style={{ ...urbanist(500), fontSize: 15, color: C.onSurfaceMuted, marginTop: 8 }}>Due Nov 8</T>

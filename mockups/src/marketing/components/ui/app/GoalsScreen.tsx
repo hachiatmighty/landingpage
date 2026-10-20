@@ -19,11 +19,11 @@ export interface SampleGoal {
   sim?: boolean;
 }
 
-/* Representative content, not a member's data. "Today" is late September, so the current quarter is
-   Q3, the next is surfaced for planning, and a goal due Sep 30 reads as due soon. */
+/* Representative content, not a member's data. "Today" is late October, so the current quarter is
+   Q4, the next is surfaced for planning, and a goal due Oct 31 reads as due soon. */
 const GOALS: SampleGoal[] = [
   { text: "Run a half marathon", due: "Due Nov 8", comments: 6, circle: 4 },
-  { text: "Ship Bestday v2", due: "Due Sep 30", dueSoon: true, unread: 2, circle: 3, sim: true },
+  { text: "Ship Bestday v2", due: "Due Oct 31", dueSoon: true, unread: 2, circle: 3, sim: true },
   { text: "Two nights a week, no laptop", completed: true, circle: 2 },
 ];
 
@@ -34,7 +34,7 @@ const CIRCLE_USERS = [
   { name: "Jen", goals: 1, member: 3 },
 ];
 
-const PERIODS = ["Q3", "Q4", "2026"];
+const PERIODS = ["Q4", "Q1", "2026"];
 
 /** components/Goals/GoalRow.tsx */
 export function GoalRow({ goal, first, last, simulate }: { goal: SampleGoal; first: boolean; last: boolean; simulate: boolean }) {
@@ -160,7 +160,7 @@ export function GoalsHeader() {
   );
 }
 
-/** The Q3 / Q4 / 2026 switcher and the search button beside it. */
+/** The Q4 / Q1 / 2026 switcher and the search button beside it. */
 export function PeriodSwitcher() {
   return (
     <V style={{ ...row, alignItems: "stretch", gap: 8, marginTop: 4, marginBottom: 12 }}>
@@ -197,7 +197,7 @@ export function GoalsScreen({ simulate = true }: { simulate?: boolean }) {
 
         {/* what the period holds */}
         <V style={{ marginBottom: 8, ...row, justifyContent: "space-between", gap: 12, minHeight: 44 }}>
-          <T style={{ ...Fonts.textRegular, ...Fonts.textBold }}>Focus for Q3</T>
+          <T style={{ ...Fonts.textRegular, ...Fonts.textBold }}>Focus for Q4</T>
           <V style={row}>
             {/* In the loop the simulated goal completes, so the bar and the count step up by one. */}
             <V style={{ width: 60, height: 4, background: C.surfaceHighlight, borderRadius: 2, overflow: "hidden" }}>
@@ -233,7 +233,7 @@ export function GoalsScreen({ simulate = true }: { simulate?: boolean }) {
         <V style={{ height: 0, marginBlock: 16 }} />
         <V style={{ marginTop: 24 }}>
           <V style={{ ...row, justifyContent: "space-between", marginBottom: 12 }}>
-            <T style={{ ...Fonts.textRegular, ...Fonts.textBold }}>My Circle - Q3</T>
+            <T style={{ ...Fonts.textRegular, ...Fonts.textBold }}>My Circle - Q4</T>
             <ChevronUp size={18} color={C.onSurfaceMuted} />
           </V>
           <CircleUsersRow simulate={simulate} />
