@@ -1,33 +1,22 @@
 import type { ReactNode } from "react";
-import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { ramp } from "../lib/anim";
-import { INK, PAPER } from "../lib/layout";
+import { INK } from "../lib/layout";
 
-/** Frames each scene overlaps the one before it while it transitions in. */
+/** Frames two scenes share while one swipes out and the next swipes in. */
 export const OVERLAP = 14;
 
-const BACKGROUNDS = {
-  dark: `radial-gradient(1100px 900px at 50% 28%, rgba(255,222,89,0.09), transparent 62%), ${INK}`,
-  light: `radial-gradient(1100px 900px at 50% 28%, rgba(255,222,89,0.22), transparent 60%), ${PAPER}`,
-} as const;
-
 /**
- * One scene: its background and how it arrives over the previous scene. Moving between the two
- * worlds (Sade's dark app, Dami's light inbox) is an iris from the centre; staying in one world is
- * a cross-fade.
+ * One scene on the brand black. Scenes change with a horizontal swipe, the way a carousel moves:
+ * the next scene pushes in from the right as this one leaves to the left.
  */
-export function Scene({ bg, enter = "fade", children }: { bg: keyof typeof BACKGROUNDS; enter?: "iris" | "fade" | "none"; children: ReactNode }) {
+export function Scene({ first = false, last = false, children }: { first?: boolean; last?: boolean; children: ReactNode }) {
   const frame = useCurrentFrame();
-  const t = enter === "none" ? 1 : ramp(frame, 0, OVERLAP);
+  const { durationInFrames } = useVideoConfig();
+  const enter = first ? 1 : ramp(frame, 0, OVERLAP);
+  const exit = last ? 0 : ramp(frame, durationInFrames - OVERLAP, OVERLAP);
   return (
-    <AbsoluteFill
-      style={{
-        background: BACKGROUNDS[bg],
-        overflow: "hidden",
-        opacity: enter === "fade" ? t : 1,
-        clipPath: enter === "iris" && t < 1 ? `circle(${t * 75}% at 50% 55%)` : undefined,
-      }}
-    >
+    <AbsoluteFill style={{ background: INK, overflow: "hidden", transform: `translateX(${(1 - enter) * 100 - exit * 100}%)` }}>
       {children}
     </AbsoluteFill>
   );

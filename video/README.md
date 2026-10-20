@@ -1,6 +1,6 @@
 # Bestday feature videos (Remotion)
 
-`EmailCircleInvites`: the feature release video for Email Circle invites. 1080×1920 at 30 fps, about 49 s, for Reels, Shorts and TikTok. All on-screen copy stays inside the text-safe box in `src/lib/layout.ts`, so platform overlays don't cover it.
+`EmailCircleInvites`: the launch video for Email Circle invites. 1080×1920 at 30 fps, 28 s, for Reels, Shorts and TikTok. It follows the Bestday social system (the bestday-carousel skill): brand black throughout, Urbanist 400 copy on one shared baseline, the wordmark top-left, and carousel-style swipes between scenes. All copy stays inside the text-safe box in `src/lib/layout.ts`.
 
 ```bash
 npm install
@@ -13,21 +13,18 @@ In a container without Remotion's own browser, point it at a local headless Chro
 
 **Music:** put a track in `public/` and render with `--props='{"music":"music.mp3","showSafeZone":false}'`. It fades in and out automatically. Set `showSafeZone` to `true` to draw the text-safe box while checking a layout.
 
-## The cut (`src/Video.tsx`)
+## The cut (`src/scenes/Launch.tsx`)
 
 | # | Scene | Copy |
 |---|---|---|
-| 1 | Hook | NEW · Email Circle invites. "Your biggest supporters don't need another app." |
-| 2 | Before | "Until now, your Circle had to be on Bestday." / "Not everyone made it past the download." |
-| 3 | Turn | "Now, all you need is their email." |
-| 4 | Invite (app) | "Invite anyone with just an email." |
-| 5 | Accept (inbox) | "Dami gets it in their inbox." / "One tap to join. No app. No account." |
-| 6 | Log progress (app) | "Every time you log progress…" |
-| 7 | Update email (inbox) | "…your Circle hears about it." |
-| 8 | Reply (inbox) | "Dami just hits reply." |
-| 9 | Lands (app) | "…and it lands right on your goal." (push notification, then the comment) |
-| 10 | Payoff | "Your people. Their inbox. Your goal." |
-| 11 | End card | Email Circle invites · **Join Bestday** |
+| 1 | Title | New in Bestday / Email Circle invites |
+| 2 | Invite (app) | Add anyone to your Circle with just their email. |
+| 3 | Join (inbox) | No app or account needed to join. |
+| 4 | Updates (inbox) | They get an email every time you update your goal. |
+| 5 | Replies (inbox, then app) | They reply to check in, and it shows up on your goal. |
+| 6 | End card | Bring your best people with you / Bestday. Do it together. |
+
+**Placeholders until the brand assets are added:** the wordmark is typeset in Urbanist (`src/components/Wordmark.tsx`), and the title scene uses an email field where a brand illustration will go.
 
 Sade Okoye (goal owner) and Dami Adebayo (email-only Circle member) are fictional. The goal is "Run a half marathon".
 

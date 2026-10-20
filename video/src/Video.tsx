@@ -1,23 +1,18 @@
-import { AbsoluteFill, Audio, interpolate, Sequence, staticFile, useVideoConfig } from "remotion";
+import { AbsoluteFill, Audio, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { OVERLAP } from "./components/Scene";
-import { SAFE } from "./lib/layout";
-import { Before, Hook, Turn } from "./scenes/Intro";
-import { Accept, Invite, Lands, LogProgress, ReplyScene, UpdateEmail } from "./scenes/Flow";
-import { EndCard, Payoff } from "./scenes/Outro";
+import { Wordmark } from "./components/Wordmark";
+import { ramp } from "./lib/anim";
+import { INK, SAFE } from "./lib/layout";
+import { EndCard, Invite, Join, Replies, Title, Updates } from "./scenes/Launch";
 
 /** The cut, in order, with each scene's length in frames (30 fps). */
 export const SCENES = [
-  { name: "Hook", Component: Hook, frames: 84 },
-  { name: "Before", Component: Before, frames: 170 },
-  { name: "Turn", Component: Turn, frames: 96 },
-  { name: "Invite", Component: Invite, frames: 196 },
-  { name: "Accept", Component: Accept, frames: 236 },
-  { name: "Log progress", Component: LogProgress, frames: 112 },
-  { name: "Update email", Component: UpdateEmail, frames: 132 },
-  { name: "Reply", Component: ReplyScene, frames: 110 },
-  { name: "Lands", Component: Lands, frames: 136 },
-  { name: "Payoff", Component: Payoff, frames: 100 },
-  { name: "End card", Component: EndCard, frames: 110 },
+  { name: "Title", Component: Title, frames: 90 },
+  { name: "Invite", Component: Invite, frames: 140 },
+  { name: "Join", Component: Join, frames: 150 },
+  { name: "Updates", Component: Updates, frames: 140 },
+  { name: "Replies", Component: Replies, frames: 190 },
+  { name: "End card", Component: EndCard, frames: 120 },
 ] as const;
 
 export const TOTAL_FRAMES = SCENES.reduce((sum, scene) => sum + scene.frames, 0);
@@ -30,21 +25,25 @@ export type VideoProps = {
 };
 
 export function EmailCircleInvites({ music, showSafeZone }: VideoProps) {
+  const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
+  const endCardAt = TOTAL_FRAMES - SCENES[SCENES.length - 1].frames;
   let from = 0;
   return (
-    <AbsoluteFill style={{ background: "#0B0B0B" }}>
+    <AbsoluteFill style={{ background: INK }}>
       {SCENES.map(({ name, Component, frames }, i) => {
         const start = from;
         from += frames;
         const last = i === SCENES.length - 1;
-        // Each scene stays mounted through the next one's transition, which draws over it.
+        // Each scene runs on through the next one's swipe, leaving as it arrives.
         return (
           <Sequence key={name} name={name} from={start} durationInFrames={frames + (last ? 0 : OVERLAP)}>
             <Component />
           </Sequence>
         );
       })}
+      {/* The wordmark holds still while scenes swipe beneath it; the end card spells the name out instead. */}
+      <Wordmark opacity={1 - ramp(frame, endCardAt, OVERLAP)} />
       {music && <Audio src={staticFile(music)} volume={(f) => interpolate(f, [0, 10, durationInFrames - 45, durationInFrames], [0, 0.8, 0.8, 0], { extrapolateRight: "clamp" })} />}
       {showSafeZone && (
         <div style={{ position: "absolute", left: SAFE.left, top: SAFE.top, width: SAFE.right - SAFE.left, height: SAFE.bottom - SAFE.top, outline: "3px dashed rgba(255,0,128,0.8)", pointerEvents: "none" }} />
