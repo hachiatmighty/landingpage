@@ -1,8 +1,10 @@
+import type { CustomThemeConfig } from "tailwindcss/types/config";
+
 /**
- * The `bd-*` design tokens the mockup components use, extracted from the source repo's
- * tailwind.config.ts (theme.extend). Spread these into your own Tailwind config's `theme.extend`.
+ * The `bd-*` design tokens used by the marketing mockups, copied from the source repo's
+ * tailwind.config.ts (theme.extend, bd-* entries only). Spread into `theme.extend`.
  */
-export const bdTokens = {
+export const bdTokens: Partial<CustomThemeConfig> = {
   fontFamily: {
     "bd-mono": ["ui-monospace", "SF Mono", "SFMono-Regular", "JetBrains Mono", "Menlo", "monospace"],
     urbanist: ["Urbanist", "-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "Roboto", "sans-serif"],
@@ -42,11 +44,20 @@ export const bdTokens = {
     "bd-gutter": "clamp(1.5rem, 4vw, 3.75rem)",
   },
   fontSize: {
+    "bd-hero": ["clamp(2.75rem, 7.2vw, 5.75rem)", { lineHeight: "0.94" }],
+    "bd-section": ["clamp(2rem, 4.4vw, 3.5rem)", { lineHeight: "1.02" }],
+    "bd-lead": ["clamp(1.0625rem, 1.5vw, 1.375rem)", { lineHeight: "1.5" }],
+    "bd-display": ["36px", { lineHeight: "1.1" }],
+    "bd-display-hero": ["40px", { lineHeight: "1.1" }],
     "bd-h1": ["28px", { lineHeight: "36px" }],
+    "bd-h2": ["24px", { lineHeight: "30px" }],
+    "bd-h3": ["18px", { lineHeight: "24px" }],
+    "bd-subtitle": ["18px", { lineHeight: "26px" }],
     "bd-body": ["16px", { lineHeight: "24px" }],
     "bd-body-md": ["15px", { lineHeight: "22px" }],
     "bd-caption": ["13px", { lineHeight: "18px" }],
     "bd-micro": ["12px", { lineHeight: "16px" }],
+    "bd-button": ["16px", { lineHeight: "1" }],
   },
   boxShadow: {
     "bd-1": "0 1px 2px rgba(0, 0, 0, 0.4)",
@@ -59,14 +70,3 @@ export const bdTokens = {
   },
   transitionDuration: { "240": "240ms", "400": "400ms" },
 };
-
-/** CSS custom properties some components read via arbitrary values (e.g. max-w-[var(--width-stage-max)]). */
-export const bdCssVars = `
-.bd-marketing {
-  --text-section: clamp(2rem, 4.4vw, 3.5rem);
-  --text-section--line-height: 1.02;
-  --width-stage-max: 1280px;
-  background-color: #0d0d0d;
-  color: #ffffff;
-}
-`;

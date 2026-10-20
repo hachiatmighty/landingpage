@@ -1,37 +1,40 @@
-# Bestday app mockups
+# Bestday mockup demos
 
-Pulled from `kayakinwunmi/bestday-ai-landing-page` (commit `18241df`, the marketing page at `src/marketing` and `public/marketing`). The folder layout mirrors the source, so the relative imports and the `/marketing/…` and `/members/…` image paths work without changes.
+A runnable copy of every mockup on the Bestday marketing page (`/marketing`) that is drawn in code, plus the image assets the page loads. The components in `src/marketing/` are copied verbatim from `kayakinwunmi/bestday-ai-landing-page` (`src/marketing`, commit `18241df`; the marketing code on `main` at `20d0b02` is identical). The folder layout mirrors the source, so imports and the `/marketing/…` and `/members/…` image paths are unchanged.
 
-## Mockup screens (`public/marketing/`)
+## Run it
 
-| File | Size | Used in | What it shows |
-|---|---|---|---|
-| `goals-screen.webp` | 940×1672 | How It Works, step 1 "Set goals worth keeping." | Rendered phone. Header with an avatar and a "…" menu, placeholder title bars, a yellow CTA pill, and a rising 3-bar chart with a yellow trend line. Below that, 3 goal cards: a round icon (mountain/flag, heart, sprout), title and subtitle bars, a yellow progress bar and 4 step dots. Bottom tab bar: home (active, yellow), target, calendar, stats. |
-| `checkin-screen.webp` | 1024×1536 | How It Works, step 3 "Show up every week." | Rendered phone. A 7-day check-in stepper (4 done as yellow checks, 3 pending), a card with a moonlit sea and a yellow sun, text bars, a note input with a pencil icon, a yellow progress bar with pager dots, and a tab bar (home active, stats, circle, profile). |
-| `community-reference.webp` | 1179×2556 | How It Works, step 2 "Invite the right Circle."; Showcase slide "Your Circle" | A real app screenshot. Title "Community" with a yellow "+" button, segmented tabs (DMs / Groups / **Connections**), search ("Search by name, email, phone, or u…" plus a camera icon), "Member suggestions" list of 6 rows (avatar or initial, name, @handle, yellow "Connect" pill), and a tab bar (Stories, Goals, a centre yellow "+" button, **Community**, Profile). |
+```bash
+npm install
+npm run dev        # http://127.0.0.1:5180
+npm run build      # typecheck + production build to dist/
+```
 
-`public/members/{r,m,t,j,s}.jpg` are the stand-in portraits. The "circle" art shows them in greyscale (`PORTRAIT_FILTER`).
+React 19, Tailwind 3, GSAP 3 + `@gsap/react`, Vite 5. Versions are pinned to what the site uses.
 
-## Code-built mockups (`src/marketing/components/`)
+## What's in the gallery (`src/App.tsx`)
 
-- **`ui/PhoneFrame.tsx`**: a CSS phone frame at 9:19. It has a gradient titanium edge, a `#050505` bezel, a dynamic island, a `bd-surface-0` screen and a diagonal glare.
-- **`ui/ShowcaseArt.tsx`**: abstract screen art that goes inside the frame, in four variants:
-  - `goals`: a yellow title bar, 4 white-alpha text bars and a goal card with a 2/3 yellow progress track.
-  - `checkin`: a 7-day strip (4 yellow, 3 outlined), text bars and a card.
-  - `circle`: 4 overlapping greyscale member avatars (the 2nd ringed in yellow), a dashed yellow "+" and text bars.
-  - `companion`: a glowing yellow orb and text bars. In the carousel it also gets a yellow play button.
-- **`sections/ProductShowcase.tsx`**: a carousel with scroll snap, pinned and driven by scroll through GSAP. Slides and captions:
-  1. Goal view: "Quarterly and annual, by category."
-  2. Weekly check-in: "Monday messages, progress your Circle can see."
-  3. Your Circle (`community-reference.webp`): "Up to 5 people, up to 50 on Premium Plus."
-  4. The Companion†: marked as not confirmed yet, play overlay.
+| # | Demo | Source |
+|---|---|---|
+| 01 | Phone screens: goals, check-in, circle, companion | `ui/PhoneFrame.tsx` + `ui/ShowcaseArt.tsx` |
+| 02 | Product carousel (scroll-pinned, autoplay, arrows + dots) | `sections/ProductShowcase.tsx` |
+| 03 | How it works: horizontal accordion with the screen images | `sections/HowItWorks.tsx` |
+| 04 | Welcome thread: typing dots → chat bubbles → calendar chip | `sections/Begin.tsx` (`WelcomeThread`) |
+| 05 | Circle glyph (avatars fan out on hover) + ledger card | `sections/Mechanism.tsx` (`CircleGlyph`), `ui/LedgerCard.tsx` |
+| 06 | Constellation, `open` and `filled` (animated SVG) | `ui/ConstellationArt.tsx` |
+| 07 | Mini orbit, alone and witnessed (in the code, not on the page) | `ui/MiniOrbit.tsx` |
+| 08 | Image assets | `public/` |
 
-  Controls: prev/next arrows and pill dots, with the active dot in yellow. Heading: "Goals, check-ins, your Circle and the Companion."
-- **`sections/HowItWorks.tsx`**: a horizontal accordion with three steps (Set / Invite / Show up). It pins on scroll, and each open step shows its screen image peeking from the bottom right.
-- Supporting files: `ui/TbcMark.tsx` (the † and Tbd markers), `ui/Wrap.tsx`, `motion/Reveal.tsx`, `lib/gsap.ts`, `lib/members.ts`, `lib/useReducedMotion.ts`.
+Supporting code: `ui/TbcMark.tsx`, `ui/Wrap.tsx`, `motion/Reveal.tsx`, `lib/gsap.ts`, `lib/members.ts`, `lib/useReducedMotion.ts`, `marketing.css` (page-scoped classes such as `.bd-marketing`, `.bd-bevel`, `.bd-meta-label`).
 
-## Using them
+## Image assets (`public/`)
 
-You need React, Tailwind 3, and `gsap` + `@gsap/react`. Spread `bdTokens` from `tailwind.tokens.ts` into `theme.extend`. Wrap the page in `.bd-marketing` with the CSS from `bdCssVars`. Serve `public/` from the site root.
+- `marketing/goals-screen.webp` (940×1672), `marketing/checkin-screen.webp` (1024×1536): rendered phone mockups.
+- `marketing/community-reference.webp` (1179×2556): a real app screenshot of the Community screen. It shows real user names and handles.
+- `marketing/hero-handshake-hanging.webp`, `marketing/alone.webp`, `marketing/witnessed.webp`: hero and Alone/Witnessed photos.
+- `members/{r,m,t,j,s}.jpg`: placeholder stock portraits, shown in greyscale. They are not real Bestday members.
+- `bestday-wordmark-white.png`: the wordmark used in the nav and footer.
 
-Palette: surface `#0D0D0D` / `#1A1A1A`, yellow `#FFDE59`, text `#FFFFFF` / `#C4C4C4` / `#999999`. Font: Urbanist.
+## Using the components in another project
+
+Spread `bdTokens` from `tailwind.tokens.ts` into your Tailwind `theme.extend`, import `src/marketing/marketing.css`, wrap the page in `.bd-marketing`, and serve `public/` from the site root. Font: Urbanist (Google Fonts).
