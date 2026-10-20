@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "commonjs",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "lib": ["es2015", "dom"],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    // ../mockups has no node_modules of its own; resolve its imports from here.
+    "paths": { "react": ["node_modules/@types/react"], "react/*": ["node_modules/@types/react/*"] }
+  },
+  "include": ["src", "remotion.config.ts", "tailwind.config.ts"]
+}

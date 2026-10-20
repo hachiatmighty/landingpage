@@ -1,0 +1,25 @@
+{
+  "name": "bestday-video",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Bestday marketing videos built with Remotion",
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render",
+    "upgrade": "remotion upgrade",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.537",
+    "@remotion/tailwind": "4.0.537",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "4.0.537"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.9.3"
+  }
+}
