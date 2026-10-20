@@ -1,4 +1,5 @@
 import "./index.css";
+import "./fonts";
 import { Composition } from "remotion";
 import { Intro } from "./Intro";
 
