@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@fontsource/inter": "5.1.0",
-    "@fontsource/urbanist": "5.1.0",
     "@remotion/cli": "4.0.531",
+    "@remotion/fonts": "^4.0.531",
     "lucide-react": "0.462.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",

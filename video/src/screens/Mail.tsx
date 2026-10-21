@@ -193,7 +193,7 @@ export function UpdateBody({ from, to, fill, marker = 0 }: { from: number; to: n
       <P style={{ fontWeight: 600 }}>
         <Marker t={marker}>Reply to this email to check in on them.</Marker>
       </P>
-      <P style={{ ...text(14, 400, MUTED), marginTop: 22 }}>— Bestday · Your Coachieving Partner</P>
+      <P style={{ ...text(14, 400, MUTED), marginTop: 22 }}>Bestday · Your Coachieving Partner</P>
     </>
   );
 }
