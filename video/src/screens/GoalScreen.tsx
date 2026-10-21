@@ -2,12 +2,12 @@ import type { CSSProperties, ReactNode } from "react";
 import { Img, staticFile } from "remotion";
 import { ArrowLeft, MoreHorizontal, Send, ThumbsUp, Users } from "lucide-react";
 import { INSETS } from "../lib/device";
-import { GOAL, REPLY, SADE, DAMI } from "../lib/layout";
+import { GOAL, REPLY, NATALIE, DAMI } from "../lib/layout";
 import { C, HAIRLINE, row, urbanist } from "../lib/theme";
 import { T, V } from "../lib/native";
 
 /**
- * Sade's goal in the app, after the mockups' GoalDetailScreen.tsx (itself a port of
+ * Natalie's goal in the app, after the mockups' GoalDetailScreen.tsx (itself a port of
  * screens/Main/GoalDetail), driven by the frame instead of CSS transitions.
  */
 
@@ -33,7 +33,18 @@ export interface GoalScreenProps {
   replyIn?: number;
   /** 0 → 1 → 0 glow on the newly arrived reply. */
   replyGlow?: number;
+  /** 0 → 1: the reply's plain yellow border, with no glow. */
+  replyBorder?: number;
+  /** 0 → 1 → 0: the reply lifts slightly (1.04) with a soft shadow, then settles. */
+  replyLift?: number;
+  /** 0 → 1 as Spartan's check-in arrives above the reply. */
+  spartanIn?: number;
+  /** How far the screen has scrolled, in points (the comment box stays put). */
+  scroll?: number;
 }
+
+/** Spartan's check-in on the goal (the coach, in the app's own comment style). */
+export const SPARTAN_COMMENT = "Good job on the progress. Keep it up.";
 
 const Photo = ({ src, size = 32 }: { src: string; size?: number }) => (
   <V style={{ width: size, height: size, borderRadius: size / 2, overflow: "hidden", background: C.textGray400 }}>
@@ -55,11 +66,12 @@ const Arrive = ({ t, max, children }: { t: number; max: number; children: ReactN
 
 const bodyText: CSSProperties = { ...urbanist(400), fontSize: 16, lineHeight: "22px", color: C.onSurfaceSubtle, marginTop: 2 };
 
-export function GoalScreen({ progress, updateScale = 1, circleScale = 1, circle, updateIn = 0, updateValue = progress, replyIn = 0, replyGlow = 0 }: GoalScreenProps) {
+export function GoalScreen({ progress, updateScale = 1, circleScale = 1, circle, updateIn = 0, updateValue = progress, replyIn = 0, replyGlow = 0, replyBorder = 0, replyLift = 0, spartanIn = 0, scroll = 0 }: GoalScreenProps) {
   const empty = 1 - Math.max(updateIn, replyIn);
 
   return (
     <V style={{ height: "100%", paddingTop: INSETS.top, background: C.surface }}>
+      <V style={{ transform: scroll ? `translateY(${-scroll}px)` : undefined }}>
       {/* header */}
       <V style={{ ...row, justifyContent: "space-between", paddingInline: 8, paddingBlock: 4 }}>
         <V style={{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }}>
@@ -110,6 +122,20 @@ export function GoalScreen({ progress, updateScale = 1, circleScale = 1, circle,
           <T style={{ ...urbanist(500), fontSize: 15, color: C.onSurfaceMuted, textAlign: "center", paddingBlock: 28 }}>No activity yet</T>
         </Arrive>
 
+        {/* GoalCommentRow for Spartan's check-in, newest first */}
+        <Arrive t={spartanIn} max={120}>
+          <V style={{ ...row, alignItems: "flex-start", gap: 10, marginBottom: 8, paddingBlock: 8 }}>
+            <InitialAvatar letter="S" />
+            <V style={{ flex: 1, background: C.surfaceHighlight, borderRadius: 16, paddingInline: 14, paddingBlock: 10 }}>
+              <V style={row}>
+                <T lines={1} style={{ ...urbanist(600), fontSize: 15, color: C.onSurface }}>Spartan</T>
+                <T style={{ ...urbanist(500), fontSize: 13, color: C.onSurfaceMuted, marginLeft: 8 }}>now</T>
+              </V>
+              <T style={bodyText}>{SPARTAN_COMMENT}</T>
+            </V>
+          </V>
+        </Arrive>
+
         {/* GoalCommentRow for a reply that came in by email */}
         <Arrive t={replyIn} max={120}>
           <V style={{ ...row, alignItems: "flex-start", gap: 10, marginBottom: 8, paddingBlock: 8 }}>
@@ -121,7 +147,12 @@ export function GoalScreen({ progress, updateScale = 1, circleScale = 1, circle,
                 borderRadius: 16,
                 paddingInline: 14,
                 paddingBlock: 10,
-                boxShadow: `0 0 0 ${1.5 * replyGlow}px rgba(255,222,89,${0.9 * replyGlow}), 0 0 ${24 * replyGlow}px rgba(255,222,89,${0.35 * replyGlow})`,
+                boxShadow: [
+                  replyGlow > 0 ? `0 0 0 ${1.5 * replyGlow}px rgba(255,222,89,${0.9 * replyGlow}), 0 0 ${24 * replyGlow}px rgba(255,222,89,${0.35 * replyGlow})` : "",
+                  replyBorder > 0 ? `inset 0 0 0 1.25px rgba(255,222,89,${replyBorder})` : "",
+                  replyLift > 0 ? `0 ${6 * replyLift}px ${18 * replyLift}px rgba(0,0,0,${0.45 * replyLift})` : "",
+                ].filter(Boolean).join(", ") || undefined,
+                transform: replyLift > 0 ? `scale(${1 + 0.04 * replyLift})` : undefined,
               }}
             >
               <V style={row}>
@@ -136,10 +167,10 @@ export function GoalScreen({ progress, updateScale = 1, circleScale = 1, circle,
         {/* ProgressUpdateItem: a flat row, one sentence saying what changed */}
         <Arrive t={updateIn} max={90}>
           <V style={{ ...row, alignItems: "flex-start", gap: 12, paddingBlock: 12, paddingInline: 4 }}>
-            <Photo src={SADE.photo} />
+            <Photo src={NATALIE.photo} />
             <V style={{ flex: 1 }}>
               <V style={{ ...row, gap: 6 }}>
-                <T style={{ ...urbanist(700), fontSize: 15, color: C.onSurface }}>{SADE.first}</T>
+                <T style={{ ...urbanist(700), fontSize: 15, color: C.onSurface }}>{NATALIE.first}</T>
                 <T style={{ ...urbanist(500), fontSize: 13, color: C.onSurfaceMuted }}>· {replyIn > 0 ? "2m" : "now"}</T>
               </V>
               <T style={{ ...urbanist(500), fontSize: 15, lineHeight: "21px", color: C.onSurfaceSubtle, marginTop: 4 }}>
@@ -150,10 +181,14 @@ export function GoalScreen({ progress, updateScale = 1, circleScale = 1, circle,
         </Arrive>
       </V>
 
+      </V>
+      {/* once scrolled, content passes under the status bar, as in the app */}
+      {scroll > 0 && <V style={{ position: "absolute", left: 0, right: 0, top: 0, height: INSETS.top, background: C.surface, zIndex: 4 }} />}
+
       {/* comment box */}
       <V style={{ position: "absolute", left: 0, right: 0, bottom: 0, paddingBottom: INSETS.bottom, background: C.surface, borderTop: `${HAIRLINE}px solid ${C.borderSubtle}`, zIndex: 5 }}>
         <V style={{ ...row, gap: 10, paddingInline: 16, paddingBlock: 10 }}>
-          <Photo src={SADE.photo} />
+          <Photo src={NATALIE.photo} />
           <V style={{ flex: 1, minHeight: 40, borderRadius: 20, background: C.surfaceInput, justifyContent: "center", paddingInline: 16, paddingBlock: 8 }}>
             <T style={{ ...urbanist(400), fontSize: 15, color: C.onSurfaceMuted }}>Add a comment (@ to mention)</T>
           </V>

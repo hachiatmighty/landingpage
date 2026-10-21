@@ -14,12 +14,12 @@ import { cam, Eyebrow, Headline, HERO, lerpCam, MARGIN, NameChip, Sparkle, UIWin
  * scene table in V2.tsx says where each one starts.
  */
 
-/** Dami's reply bubble on Sade's goal, in screen points (GoalScreen with the reply at the top of Activity). */
+/** Dami's reply bubble on Natalie's goal, in screen points (GoalScreen with the reply at the top of Activity). */
 export const BUBBLE = { cy: 431, sparkle: { x: 372, y: 402 } } as const;
 /** The payoff framing, shared by the cover, Scene 1 and the end of Scene 6. */
 const PAYOFF = cam(400, HERO, 199);
 
-/** Sade's goal with Dami's reply on it: the payoff, used by the cover, Scene 1 and Scene 6. */
+/** Natalie's goal with Dami's reply on it: the payoff, used by the cover, Scene 1 and Scene 6. */
 function Payoff({ replyIn = 1, glow = 1, sparkle = 1, twinkle = 0 }: { replyIn?: number; glow?: number; sparkle?: number; twinkle?: number }) {
   return (
     <>
@@ -52,7 +52,7 @@ export function Hook({ still = false }: { still?: boolean }) {
   );
 }
 
-/* ---------- Scenes 2 and 3: Sade invites Dami (one continuous shot) ---------- */
+/* ---------- Scenes 2 and 3: Natalie invites Dami (one continuous shot) ---------- */
 
 export function Invite() {
   const frame = useCurrentFrame();
@@ -91,7 +91,7 @@ export const DAMI_VIEW = { invite: 480, joined: 400, update: 420, reply: 215 } a
 const INVITE_SCROLL = 120;
 const ACCEPT = { x: 100, y: 558 };
 
-/** Dami's phone, light mode: joins from the invite email, then gets Sade's update. Scene 5 starts at local frame 84. */
+/** Dami's phone, light mode: joins from the invite email, then gets Natalie's update. Scene 5 starts at local frame 84. */
 export function DamiInbox({ frame }: { frame: number }) {
   const tapAccept = 30;
   const update = 84;
@@ -117,7 +117,7 @@ export function DamiInbox({ frame }: { frame: number }) {
             </Message>
           </div>
         )}
-        {/* Sade's update arrives: the email slides down from the top and lands open. */}
+        {/* Natalie's update arrives: the email slides down from the top and lands open. */}
         {arrive > 0 && (
           <div style={{ position: "absolute", inset: 0, transform: `translateY(${(arrive - 1) * 100}%)`, boxShadow: "0 10px 30px rgba(0,0,0,0.18)" }}>
             <Message subject={SUBJECTS.update}>
@@ -134,7 +134,7 @@ export function DamiInbox({ frame }: { frame: number }) {
 
 /* ---------- Scene 6: the reply ---------- */
 
-/** Dami replies; whip pan back to Sade; the reply lands on her goal and the camera pushes in. */
+/** Dami replies; whip pan back to Natalie; the reply lands on her goal and the camera pushes in. */
 export function Reply({ frame }: { frame: number }) {
   const tapReply = 2;
   const typeAt = 10;

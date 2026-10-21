@@ -4,7 +4,7 @@ import { Sparkle as SparkleIcon } from "lucide-react";
 import { mix, pop, ramp } from "../lib/anim";
 import { SCREEN } from "../lib/device";
 import { BRAND } from "../lib/fonts";
-import { DAMI, SADE, YELLOW } from "../lib/layout";
+import { DAMI, NATALIE, YELLOW } from "../lib/layout";
 
 /*
  * The v2 stage. There is no phone frame: every app and email state is shown through one cropped
@@ -123,11 +123,11 @@ export function NameChip({ who, frame, at }: { who: "sade" | "dami"; frame: numb
       }}
     >
       {sade ? (
-        <Img src={staticFile(SADE.photo)} style={{ width: 40, height: 40, borderRadius: 20, objectFit: "cover" }} />
+        <Img src={staticFile(NATALIE.photo)} style={{ width: 40, height: 40, borderRadius: 20, objectFit: "cover" }} />
       ) : (
         <div style={{ width: 40, height: 40, borderRadius: 20, background: "#969696", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: BRAND, fontWeight: 600, fontSize: 19, color: "#fff" }}>{DAMI.first[0]}</div>
       )}
-      <span style={{ fontFamily: BRAND, fontWeight: 600, fontSize: 28, color: "#FFFFFF" }}>{sade ? SADE.first : DAMI.first}</span>
+      <span style={{ fontFamily: BRAND, fontWeight: 600, fontSize: 28, color: "#FFFFFF" }}>{sade ? NATALIE.first : DAMI.first}</span>
     </div>
   );
 }

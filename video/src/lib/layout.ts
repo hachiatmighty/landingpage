@@ -25,8 +25,8 @@ export const COPY_TOP = 340;
 /** Everything below the copy: phones and illustrations start under here. */
 export const COPY_FLOOR = 610;
 
-/** The cast. Fictional people; Sade's portrait is the mockups' placeholder stock photo. */
-export const SADE = { first: "Sade", full: "Sade Okoye", photo: "members/s.jpg" };
+/** The cast. Fictional people; Natalie's portrait is the mockups' placeholder stock photo. */
+export const NATALIE = { first: "Natalie", full: "Natalie", photo: "members/s.jpg" };
 export const DAMI = { first: "Dami", full: "Dami Adebayo", email: "dami@adebayo.me" };
 export const GOAL = { title: "Run a half marathon", period: "2026 Q4", due: "Due Nov 8", dueLong: "November 8, 2026" };
 export const REPLY = "Look at you go. Saturday long run?";

@@ -2,6 +2,23 @@
 
 `EmailCircleInvites`: the launch video for Email Circle invites. 1080×1920 at 30 fps, 28 s, for Reels, Shorts and TikTok. It follows the Bestday social system (the bestday-carousel skill): brand black throughout, Urbanist 400 copy on one shared baseline, the wordmark top-left, and carousel-style swipes between scenes. All copy stays inside the text-safe box in `src/lib/layout.ts`.
 
+## v5 (current): `EmailCircleInvitesV5`, `EmailCircleInvitesV5Feed` and `CoverV5`
+
+Built to `video-v5/BRIEF.md` and the storyboard doc. 630 frames (21 s) at 30 fps. Code is in `src/v5/V5.tsx`.
+
+```bash
+npx remotion render src/index.ts EmailCircleInvitesV5 out/v5/email-circle-invites-v5.mp4          # 1080x1920
+npx remotion render src/index.ts EmailCircleInvitesV5Feed out/v5/email-circle-invites-v5-feed.mp4 # 1080x1350
+npx remotion still src/index.ts CoverV5 out/v5/cover-1080x1920.png
+ffmpeg -i out/v5/cover-1080x1920.png -vf "crop=1080:1440:0:240" out/v5/cover-1080x1440.png
+```
+
+- **Opener:** frames 0 to 155 port `reference/opening-prototype.html` line for line (layout, clocks, easing).
+- **Phones:** Natalie's and Dami's phones sit 1200px apart in one world, and the camera pans between them.
+- **New mockup states:** the keyboard lifting the invite sheet, Spartan's comment, the reply's plain yellow border and lift, and scrolling on the goal screen.
+- **Feed cut:** same timeline. The UI scrolls a little further so the key moments stay in frame.
+- **Sound:** pass `music` and `sfx` (tick, tap, keys, whoosh, mail, warmChime) as props; the cues are in `CUES`. Effects play at about -18 dB under the music.
+
 ## v2 (current): `EmailCircleInvitesV2` and `CoverV2`
 
 Built to the storyboard doc "Email Circle Invites: Video Storyboard v2". 1080×1920, 30 fps, 585 frames (19.5 s). Code is in `src/v2/`.
@@ -42,10 +59,10 @@ In a container without Remotion's own browser, point it at a local headless Chro
 
 **Placeholders until the brand assets are added:** the wordmark is typeset in Urbanist (`src/components/Wordmark.tsx`), and the title scene uses an email field where a brand illustration will go.
 
-Sade Okoye (goal owner) and Dami Adebayo (email-only Circle member) are fictional. The goal is "Run a half marathon".
+Natalie (goal owner) and Dami Adebayo (email-only Circle member) are fictional. The goal is "Run a half marathon".
 
 ## Where things come from
 
 - `src/lib/theme.ts`, `native.tsx` and `device.ts` are copied unchanged from `mockups/src/marketing/components/ui/app/`.
 - `src/screens/GoalScreen.tsx` and the progress sheet are frame-driven ports of the mockups' `GoalDetailScreen.tsx` and `ProgressSheet.tsx`. Remotion renders frame by frame, so nothing here uses CSS transitions or timers.
-- `src/screens/Mail.tsx` holds the light mail client (generic, with no real client's chrome) and the three email bodies. The invite and "you're in" emails follow the live templates. **The update email is a new design** ("Sade Okoye just made an update to their goal… Reply to this email to check in on them").
+- `src/screens/Mail.tsx` holds the light mail client (generic, with no real client's chrome) and the three email bodies. The invite and "you're in" emails follow the live templates. **The update email is a new design** ("Natalie just made an update to their goal… Reply to this email to check in on them").

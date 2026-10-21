@@ -3,7 +3,7 @@ import { Img, staticFile } from "remotion";
 import { Archive, ArrowUp, ChevronLeft, Forward, PenSquare, Reply, Search, Trash2 } from "lucide-react";
 import { INSETS, SCREEN } from "../lib/device";
 import { MAIL } from "../lib/fonts";
-import { DAMI, GOAL, SADE } from "../lib/layout";
+import { DAMI, GOAL, NATALIE } from "../lib/layout";
 
 /**
  * Dami's phone: a plain, light mail app. It is deliberately generic (no real client's chrome), so the
@@ -23,9 +23,9 @@ const text = (size: number, weight = 400, color = INK): CSSProperties => ({ font
 export const SENDER = { name: "Bestday", address: "circle@send.bestday.ai" };
 
 export const SUBJECTS = {
-  invite: `${SADE.full} wants you on their goal: “${GOAL.title}”`,
-  joined: `You’re in ${SADE.first}’s Circle`,
-  update: `${SADE.full} just made an update to their goal`,
+  invite: `${NATALIE.full} wants you on their goal: “${GOAL.title}”`,
+  joined: `You’re in ${NATALIE.first}’s Circle`,
+  update: `${NATALIE.full} just made an update to their goal`,
 } as const;
 
 /* ---------- Inbox ---------- */
@@ -133,10 +133,10 @@ export function InviteBody({ acceptScale = 1 }: { acceptScale?: number }) {
   return (
     <>
       <P>Hey there,</P>
-      <P>{SADE.full} wants you to join them on a goal:</P>
+      <P>{NATALIE.full} wants you to join them on a goal:</P>
       <P style={{ fontWeight: 700 }}>{GOAL.title}</P>
       <P>Due {GOAL.dueLong}</P>
-      <P>{SADE.full} is using Bestday to achieve meaningful goals with people who care. They want you in their Circle for this one.</P>
+      <P>{NATALIE.full} is using Bestday to achieve meaningful goals with people who care. They want you in their Circle for this one.</P>
       <P>Accept the invite below to start receiving updates and comment on this goal.</P>
       <Button label="Accept Invitation" scale={acceptScale} />
     </>
@@ -147,7 +147,7 @@ export function JoinedBody({ marker = 0 }: { marker?: number }) {
   return (
     <>
       <P>Hey {DAMI.first},</P>
-      <P style={{ fontWeight: 700 }}>You’re now part of {SADE.full}’s Circle.</P>
+      <P style={{ fontWeight: 700 }}>You’re now part of {NATALIE.full}’s Circle.</P>
       <P>You’re connected to “{GOAL.title}”. We’ll send updates about this goal to this email address.</P>
       <P>
         Reply to this email to comment on the goal. <Marker t={marker}>No Bestday account is needed.</Marker>
@@ -172,10 +172,10 @@ export function UpdateBody({ from, to, fill, marker = 0 }: { from: number; to: n
   return (
     <>
       <P>Hey {DAMI.first},</P>
-      <P style={{ fontWeight: 700 }}>{SADE.full} just made an update to their goal.</P>
+      <P style={{ fontWeight: 700 }}>{NATALIE.full} just made an update to their goal.</P>
       <div style={{ marginTop: 16, border: `1px solid ${LINE}`, borderRadius: 14, padding: "16px 16px 18px", background: "#FAFAF8" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Img src={staticFile(SADE.photo)} style={{ width: 34, height: 34, borderRadius: 17, objectFit: "cover" }} />
+          <Img src={staticFile(NATALIE.photo)} style={{ width: 34, height: 34, borderRadius: 17, objectFit: "cover" }} />
           <div>
             <div style={text(16, 700)}>{GOAL.title}</div>
             <div style={text(13, 400, MUTED)}>{GOAL.due}</div>
@@ -294,7 +294,7 @@ export function ReplySheet({ open, typed, caret, sendScale = 1, subject }: { ope
           <div style={{ ...text(14, 400, "#9A9A9A"), marginTop: 26, borderLeft: `2px solid ${LINE}`, paddingLeft: 10 }}>
             Bestday &lt;{SENDER.address}&gt; wrote:
             <br />
-            {SADE.full} just made an update to their goal…
+            {NATALIE.full} just made an update to their goal…
           </div>
         </div>
       </div>

@@ -34,7 +34,7 @@ const CUES: { at: number; sound: keyof Sfx; volume?: number }[] = [
   { at: 406, sound: "warmChime" },
 ];
 
-/** Scenes 2 to 6: Sade's phone, a whip pan to Dami's, and back for the reply. */
+/** Scenes 2 to 6: Natalie's phone, a whip pan to Dami's, and back for the reply. */
 function Middle() {
   const local = useCurrentFrame();
   const g = local + V2_SCENES.circle;

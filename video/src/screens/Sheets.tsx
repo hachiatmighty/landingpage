@@ -12,13 +12,14 @@ const INVITE_TOP = 469;
 const INPUT_TOP = INVITE_TOP + 118;
 const BUTTON_TOP = INPUT_TOP + 58 + 22;
 
-export const INVITE_POINTS = { send: { x: 196, y: BUTTON_TOP + 29 } } as const;
+export const INVITE_POINTS = { field: { x: 196, y: INPUT_TOP + 29 }, send: { x: 196, y: BUTTON_TOP + 29 } } as const;
 
 /** The sheet the Circle action opens, as in the app: title, one line of explanation, email field, Send invite. */
-export function InviteSheet({ open, email, caret, sendScale = 1 }: { open: number; email: string; caret: boolean; sendScale?: number }) {
+export function InviteSheet({ open, email, caret, sendScale = 1, keyboard = 0 }: { open: number; email: string; caret: boolean; sendScale?: number; keyboard?: number }) {
   return (
     <>
       <Scrim t={open} />
+      <Keyboard t={keyboard * open} />
       <V
         style={{
           position: "absolute",
@@ -30,7 +31,7 @@ export function InviteSheet({ open, email, caret, sendScale = 1 }: { open: numbe
           background: C.surfaceFloating,
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
-          transform: `translateY(${(1 - open) * 105}%)`,
+          transform: `translateY(calc(${(1 - open) * 105}% - ${keyboard * KEYBOARD_HEIGHT}px))`,
           paddingInline: 20,
         }}
       >
@@ -65,14 +66,38 @@ export function InviteSheet({ open, email, caret, sendScale = 1 }: { open: numbe
   );
 }
 
-/** The confirmation toast after sending. */
-export function Toast({ t, text }: { t: number; text: string }) {
+/* ---------- The keyboard ---------- */
+
+/** The iOS keyboard's height on a 393pt-wide iPhone, with the suggestion bar. */
+export const KEYBOARD_HEIGHT = 291;
+
+/** The dark-mode iOS keyboard, rising with `t`. When the email field is focused it lifts the sheet with it. */
+function Keyboard({ t }: { t: number }) {
+  if (t <= 0) return null;
+  const rows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+  return (
+    <V style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: KEYBOARD_HEIGHT, zIndex: 42, background: "#2B2B2D", transform: `translateY(${(1 - t) * 100}%)`, paddingTop: 52, gap: 12, alignItems: "center" }}>
+      {rows.map((keys) => (
+        <V key={keys} style={{ flexDirection: "row", gap: 6 }}>
+          {keys.split("").map((k) => (
+            <V key={k} style={{ width: 33, height: 42, borderRadius: 5, background: "#6B6B6D", alignItems: "center", justifyContent: "center" }}>
+              <T style={{ fontSize: 22, color: "#fff" }}>{k}</T>
+            </V>
+          ))}
+        </V>
+      ))}
+    </V>
+  );
+}
+
+/** The confirmation toast after sending. `bottom` (pt) moves it up from its usual place above the home indicator. */
+export function Toast({ t, text, bottom = INSETS.bottom + 80 }: { t: number; text: string; bottom?: number }) {
   return (
     <V
       style={{
         position: "absolute",
         left: "50%",
-        bottom: INSETS.bottom + 80,
+        bottom,
         zIndex: 50,
         transform: `translate(-50%, ${(1 - t) * 30}px)`,
         opacity: t,

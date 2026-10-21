@@ -6,7 +6,7 @@ import { Tap } from "../components/Phone";
 import { Scene } from "../components/Scene";
 import { caretOn, mix, pop, press, ramp, typed, window } from "../lib/anim";
 import { BRAND } from "../lib/fonts";
-import { COPY_TOP, DAMI, GOAL, GREY, REPLY, SAFE, SADE, YELLOW } from "../lib/layout";
+import { COPY_TOP, DAMI, GOAL, GREY, REPLY, SAFE, NATALIE, YELLOW } from "../lib/layout";
 import { GOAL_POINTS, GoalScreen } from "../screens/GoalScreen";
 import { COMPOSE_POINTS, INBOX_POINTS, Inbox, InviteBody, JoinedBody, Message, MESSAGE_POINTS, ReplySheet, SUBJECTS, UpdateBody, bestdayRow } from "../screens/Mail";
 import { PushBanner } from "../screens/PushBanner";
@@ -18,8 +18,8 @@ import { INVITE_POINTS, InviteSheet, Toast } from "../screens/Sheets";
  * copy says what the phone is showing at the same moment.
  */
 
-const INVITE_ROW = bestdayRow(SUBJECTS.invite, `${DAMI.first}, join ${SADE.full} on “${GOAL.title}”`);
-const JOINED_ROW = bestdayRow(SUBJECTS.joined, `You’re now part of ${SADE.full}’s Circle.`);
+const INVITE_ROW = bestdayRow(SUBJECTS.invite, `${DAMI.first}, join ${NATALIE.full} on “${GOAL.title}”`);
+const JOINED_ROW = bestdayRow(SUBJECTS.joined, `You’re now part of ${NATALIE.full}’s Circle.`);
 const UPDATE_ROW = bestdayRow(SUBJECTS.update, `“${GOAL.title}” is now at 45%. Reply to check in.`);
 const read = (row: typeof INVITE_ROW) => ({ row: { ...row, unread: false, time: "9:41" }, t: 1 });
 
@@ -63,7 +63,7 @@ export function Title() {
   );
 }
 
-/** 2. Invite: Sade adds Dami by email. */
+/** 2. Invite: Natalie adds Dami by email. */
 export function Invite() {
   const frame = useCurrentFrame();
   const tapCircle = 22;
@@ -132,7 +132,7 @@ export function Updates() {
   );
 }
 
-/** 5. Replies: Dami replies to the email and it lands on Sade's goal. */
+/** 5. Replies: Dami replies to the email and it lands on Natalie's goal. */
 export function Replies() {
   const frame = useCurrentFrame();
   const tapReply = 12;
@@ -144,7 +144,7 @@ export function Replies() {
   return (
     <Scene>
       <Copy frame={frame}>They reply to check in, and it shows up on your goal.</Copy>
-      {/* Dami's phone leaves to the left as Sade's arrives from the right. */}
+      {/* Dami's phone leaves to the left as Natalie's arrives from the right. */}
       <HeroPhone light dx={-swap * 1100} zoom={push(frame, typeAt - 6, tapSend - 2, 196, 230, 1.45)}>
         <Message subject={SUBJECTS.update} replyScale={press(frame, tapReply, 0.95)}>
           <UpdateBody from={20} to={45} fill={1} marker={1} />
