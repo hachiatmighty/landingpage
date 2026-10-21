@@ -211,16 +211,17 @@ function camera(F: Format, frame: number) {
 
 /* ---------- Typing ---------- */
 
-/** About `cps` characters a second, each keystroke a little early or late, the same on every render. */
-function typedNatural(text: string, frame: number, start: number, cps: number) {
+/** The frame each character lands on: about `cps` a second, each keystroke a little early or late, the same on every render. */
+function keystrokes(text: string, start: number, cps: number) {
   let time = start;
-  let n = 0;
-  for (let i = 0; i < text.length; i++) {
-    const jitter = Math.sin(i * 12.9898 + text.length) * 0.35;
-    time += (30 / cps) * (1 + jitter);
-    if (time <= frame) n = i + 1;
-  }
-  return text.slice(0, n);
+  return text.split("").map((_, i) => {
+    time += (30 / cps) * (1 + Math.sin(i * 12.9898 + text.length) * 0.35);
+    return Math.ceil(time);
+  });
+}
+
+function typedNatural(text: string, frame: number, start: number, cps: number) {
+  return text.slice(0, keystrokes(text, start, cps).filter((f) => f <= frame).length);
 }
 
 /* ---------- Scenes 3 to 6: the two phones ---------- */
@@ -240,6 +241,9 @@ const T = {
   spartan: 505,
 };
 
+/** Typing speeds (characters a second): the email at the brief's 22, the reply quicker so it lands on time. */
+const TYPING = { email: 22, reply: 32 };
+
 /** Natalie's phone: her goal, the invite, and later the reply landing on it. */
 function NataliePhone({ F, frame }: { F: Format; frame: number }) {
   const rise = at(frame, T.rise, 16);
@@ -249,7 +253,7 @@ function NataliePhone({ F, frame }: { F: Format; frame: number }) {
     return (
       <Phone y={F.phoneTop + (1 - rise) * 60} style={{ opacity: rise }}>
         <GoalScreen progress={20} circle={0} />
-        <InviteSheet open={sheet} email={typedNatural(DAMI.email, frame, T.typeEmail, 22)} caret={frame > T.fieldTap && frame < T.send} keyboard={keyboard} />
+        <InviteSheet open={sheet} email={typedNatural(DAMI.email, frame, T.typeEmail, TYPING.email)} caret={frame > T.fieldTap && frame < T.send} keyboard={keyboard} />
         <Toast t={at(frame, T.send + 8, 14) * (1 - at(frame, 330, 10, inOut))} text="Invite sent" bottom={852 - 380 - 23} />
         <Tap frame={frame} at={T.circleTap} x={GOAL_POINTS.circle.x} y={GOAL_POINTS.circle.y} />
         <Tap frame={frame} at={T.fieldTap} x={196} y={INVITE_POINTS.field.y - KEYBOARD_HEIGHT} />
@@ -286,7 +290,7 @@ function DamiPhone({ F, frame }: { F: Format; frame: number }) {
           </Message>
         </div>
       )}
-      <ReplySheet open={replyOpen} typed={typedNatural(REPLY, frame, T.typeReply, 32)} caret={frame >= T.replyOpen && frame < T.sendReply} subject={SUBJECTS.update} />
+      <ReplySheet open={replyOpen} typed={typedNatural(REPLY, frame, T.typeReply, TYPING.reply)} caret={frame >= T.replyOpen && frame < T.sendReply} subject={SUBJECTS.update} />
       <Tap frame={frame} at={T.accept} x={accept.x} y={accept.y} light />
       <Tap frame={frame} at={T.sendReply} x={COMPOSE_POINTS.send.x} y={COMPOSE_POINTS.send.y} light />
     </Phone>
@@ -357,28 +361,35 @@ function EndCard({ F, frame }: { F: Format; frame: number }) {
 /* ---------- The video ---------- */
 
 /** UI sounds the brief calls for; each is a file in public/, or empty to leave it out. */
-export type Sfx = Partial<Record<"tick" | "tap" | "keys" | "whoosh" | "mail" | "warmChime", string>>;
+export type Sfx = Partial<Record<"tick1" | "tick2" | "tick3" | "tap" | "key" | "whoosh" | "mail" | "warmChime", string>>;
 export type V5Props = { music: string; sfx: Sfx };
 
-const CUES: { at: number; sound: keyof Sfx; volume?: number; rate?: number }[] = [
-  { at: 68, sound: "tick", rate: 1 },
-  { at: 84, sound: "tick", rate: 1.06 },
-  { at: 100, sound: "tick", rate: 1.12 },
+/** The synthesized effects from scripts/make_audio.py. No music: it is added outside this project. */
+export const DEFAULT_AUDIO: V5Props = {
+  music: "",
+  sfx: { tick1: "sfx/tick-1.wav", tick2: "sfx/tick-2.wav", tick3: "sfx/tick-3.wav", tap: "sfx/tap.wav", key: "sfx/key.wav", whoosh: "sfx/whoosh.wav", mail: "sfx/mail.wav", warmChime: "sfx/warm-chime.wav" },
+};
+
+const CUES: { at: number; sound: keyof Sfx; gain?: number }[] = [
+  // one tick per notification, rising (the prototype's arrivals, on its clock starting at frame 50)
+  { at: 50 + ARR[0], sound: "tick1" },
+  { at: 50 + ARR[1], sound: "tick2" },
+  { at: 50 + ARR[2], sound: "tick3" },
   { at: T.circleTap, sound: "tap" },
   { at: T.fieldTap, sound: "tap" },
-  { at: T.typeEmail, sound: "keys" },
+  ...keystrokes(DAMI.email, T.typeEmail, TYPING.email).map((f) => ({ at: f, sound: "key" as const, gain: 0.7 })),
   { at: T.send, sound: "tap" },
   { at: 305, sound: "whoosh" },
-  { at: 305, sound: "mail" },
   { at: T.accept, sound: "tap" },
   { at: T.updateArrives, sound: "mail" },
-  { at: T.typeReply, sound: "keys" },
+  ...keystrokes(REPLY, T.typeReply, TYPING.reply).map((f) => ({ at: f, sound: "key" as const, gain: 0.7 })),
+  { at: T.sendReply, sound: "tap" },
   { at: T.sendReply, sound: "whoosh" },
-  { at: T.replyLands, sound: "warmChime" },
+  { at: T.replyLands, sound: "warmChime", gain: 1.4 },
 ];
 
-/** Music sits on top; the effects about -18 dB under it. */
-const SFX_VOLUME = 0.126;
+/** The effects' level. Music is mixed in elsewhere, so they render at a normal level, ready to sit under it. */
+const SFX_VOLUME = 0.6;
 
 function Video({ F, music, sfx }: { F: Format } & V5Props) {
   const frame = useCurrentFrame();
@@ -397,10 +408,10 @@ function Video({ F, music, sfx }: { F: Format } & V5Props) {
         </div>
       )}
       {music && <Audio src={staticFile(music)} volume={(f) => interpolate(f, [0, 12, durationInFrames - 30, durationInFrames], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />}
-      {CUES.map(({ at: cue, sound, rate = 1 }) =>
+      {CUES.map(({ at: cue, sound, gain = 1 }, i) =>
         sfx[sound] ? (
-          <Sequence key={`${sound}-${cue}`} from={cue} layout="none">
-            <Audio src={staticFile(sfx[sound]!)} volume={SFX_VOLUME} playbackRate={rate} />
+          <Sequence key={`${sound}-${cue}-${i}`} from={cue} layout="none">
+            <Audio src={staticFile(sfx[sound]!)} volume={SFX_VOLUME * gain} />
           </Sequence>
         ) : null,
       )}

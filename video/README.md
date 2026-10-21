@@ -17,7 +17,15 @@ ffmpeg -i out/v5/cover-1080x1920.png -vf "crop=1080:1440:0:240" out/v5/cover-108
 - **Phones:** Natalie's and Dami's phones sit 1200px apart in one world, and the camera pans between them.
 - **New mockup states:** the keyboard lifting the invite sheet, Spartan's comment, the reply's plain yellow border and lift, and scrolling on the goal screen.
 - **Feed cut:** same timeline. The UI scrolls a little further so the key moments stay in frame.
-- **Sound:** pass `music` and `sfx` (tick, tap, keys, whoosh, mail, warmChime) as props; the cues are in `CUES`. Effects play at about -18 dB under the music.
+- **Sound:** UI effects only, all synthesized by `scripts/make_audio.py` into `public/sfx/` (no samples, so no licensing):
+  - a rising tick per notification
+  - taps
+  - a key click per typed character, timed to the on-screen typing
+  - a whoosh per pan
+  - the mail chime
+  - the warm chime when the reply lands
+
+  Music is added outside this project, so the effects render at a normal level, ready to mix under it. The cues are in `CUES` in `src/v5/V5.tsx`.
 
 ## v2 (current): `EmailCircleInvitesV2` and `CoverV2`
 
