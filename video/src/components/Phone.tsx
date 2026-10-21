@@ -3,7 +3,7 @@ import { SCREEN } from "../lib/device";
 import { MAIL } from "../lib/fonts";
 
 /** The iOS status bar, white on the dark app and black on the light mail app. */
-function StatusBar({ color }: { color: string }) {
+export function StatusBar({ color }: { color: string }) {
   return (
     <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 54, zIndex: 30, display: "flex", alignItems: "center", justifyContent: "space-between", paddingLeft: 52, paddingRight: 36, paddingTop: 4, color, fontFamily: MAIL }}>
       <span style={{ fontSize: 17, fontWeight: 600, letterSpacing: -0.4 }}>9:41</span>
