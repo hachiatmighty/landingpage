@@ -19,11 +19,11 @@ export interface Member {
 }
 
 export const MEMBERS: Member[] = [
-  { initial: "R", src: "/members/r.jpg" },
-  { initial: "M", src: "/members/m.jpg" },
-  { initial: "T", src: "/members/t.jpg" },
-  { initial: "J", src: "/members/j.jpg" },
-  { initial: "S", src: "/members/s.jpg" },
+  { initial: "R", src: `${import.meta.env.BASE_URL}members/r.jpg` },
+  { initial: "M", src: `${import.meta.env.BASE_URL}members/m.jpg` },
+  { initial: "T", src: `${import.meta.env.BASE_URL}members/t.jpg` },
+  { initial: "J", src: `${import.meta.env.BASE_URL}members/j.jpg` },
+  { initial: "S", src: `${import.meta.env.BASE_URL}members/s.jpg` },
 ];
 
 /** The desaturating treatment applied wherever a member portrait appears. */

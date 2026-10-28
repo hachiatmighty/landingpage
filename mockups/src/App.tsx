@@ -5,6 +5,7 @@ import { Moment } from "./marketing/components/ui/Moments";
 import { DeviceScreen } from "./marketing/components/ui/app/DeviceScreen";
 import { GoalTour } from "./marketing/components/ui/app/GoalTour";
 import { COMMENT, GoalDetailScreen, type GoalDetailState } from "./marketing/components/ui/app/GoalDetailScreen";
+import { ChooseGoalScreen, InviteByEmailSheet, PeopleListScreen } from "./marketing/components/ui/app/InviteToCircle";
 import { GOAL_TITLE, NewGoalScreen } from "./marketing/components/ui/app/NewGoalScreen";
 import { ProgressSheet } from "./marketing/components/ui/app/ProgressSheet";
 import { ShareGoalPrompt } from "./marketing/components/ui/app/ShareGoalPrompt";
@@ -127,9 +128,42 @@ const TOUR_FRAMES: { label: string; screen: ReactNode }[] = [
   },
 ];
 
+/* Inviting people into the Circle, matched to screenshots of the current app. */
+const INVITE_FRAMES: { label: string; note: string; screen: ReactNode }[] = [
+  {
+    label: "Invite to your Circle",
+    note: "The email sheet on a goal",
+    screen: (
+      <Layer>
+        <GoalDetailScreen state={DETAIL_START} />
+        <InviteByEmailSheet email="dami@adebayo.me" />
+      </Layer>
+    ),
+  },
+  {
+    label: "Invite to Circle: choose a goal",
+    note: "From the + on the Circle screen",
+    screen: (
+      <Layer>
+        <ChooseGoalScreen />
+      </Layer>
+    ),
+  },
+  {
+    label: "Invite to Circle: people",
+    note: "Invite becomes ✓ Member",
+    screen: (
+      <Layer>
+        <PeopleListScreen />
+      </Layer>
+    ),
+  },
+];
+
 const NAV = [
   ["tour", "Hero goal tour"],
   ["screens", "App screens"],
+  ["invites", "Circle invites"],
   ["frames", "Tour frames"],
   ["moments", "Membership moments"],
 ] as const;
@@ -167,8 +201,9 @@ export function App() {
           App mockups, <span className="bg-bd-yellow px-1">in code</span>
         </h1>
         <p className="m-0 max-w-[62ch] text-bd-lead text-bd-ink-soft">
-          Every phone screen on bestdayai.vercel.app/marketing. They are rebuilt from the app&rsquo;s own React Native
-          styles on a 393×852pt canvas and scaled to fit, so they stay sharp at any size.
+          Every phone screen on bestdayai.vercel.app/marketing, plus the Circle invite screens. They are rebuilt from the
+          app&rsquo;s own React Native styles and screenshots on a 393×852pt canvas and scaled to fit, so they stay sharp
+          at any size.
         </p>
         <nav className="flex flex-wrap gap-bd-8">
           {NAV.map(([id, label]) => (
@@ -205,6 +240,21 @@ export function App() {
           {APP_SCREENS.map(({ variant, label, where }) => (
             <Phone key={variant} label={label} note={where}>
               {variant === "story" ? <StoryScreen /> : <AppScreen variant={variant} />}
+            </Phone>
+          ))}
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-bd-32">
+        <SectionHeader id="invites" title="Circle invites" source="components/ui/app/InviteToCircle.tsx">
+          How people get into a member&rsquo;s Circle: by email from a goal, or from the Circle screen&rsquo;s + by
+          choosing a goal and then the people to add to it. Matched to screenshots of the current app; these screens
+          are not on the marketing page.
+        </SectionHeader>
+        <div className="grid grid-cols-2 gap-x-bd-24 gap-y-bd-40 rounded-[28px] bg-bd-ink px-5 py-12 text-bd-paper-2 md:grid-cols-4 md:px-10 [&_figcaption_span:last-child]:text-white/55">
+          {INVITE_FRAMES.map(({ label, note, screen }) => (
+            <Phone key={label} label={label} note={note}>
+              <DeviceScreen background={C.surface}>{screen}</DeviceScreen>
             </Phone>
           ))}
         </div>

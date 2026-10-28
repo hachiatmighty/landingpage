@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { ArrowLeft, MoreHorizontal, Send, Sparkles, ThumbsUp, Users } from "lucide-react";
+import { ArrowLeft, ArrowUp, MoreHorizontal, Sparkles, ThumbsUp, Users } from "lucide-react";
 import { MEMBERS } from "../../../lib/members";
 import { INSETS } from "./device";
 import { C, HAIRLINE, row, urbanist } from "./theme";
@@ -83,12 +83,13 @@ const Arrive = ({ shown, children }: { shown: boolean; children: ReactNode }) =>
 
 const bodyText = { ...urbanist(400), fontSize: 16, lineHeight: "22px", color: C.onSurfaceSubtle, marginTop: 2 };
 
-/** GoalCommentRow: avatar, then a bubble holding "name  AI  time" and the text. */
+/** GoalCommentRow: avatar, then a bubble holding "name  AI  time" and the text, with React beneath it. */
 function CommentBubble({ avatar, name, ai, children }: { avatar: ReactNode; name: string; ai?: boolean; children: ReactNode }) {
   return (
-    <V style={{ ...row, alignItems: "flex-start", gap: 10, marginBottom: 8, paddingBottom: 8 }}>
+    <V style={{ ...row, alignItems: "flex-start", gap: 10, marginBottom: 8, paddingBottom: 4 }}>
       {avatar}
-      <V style={{ flex: 1, background: C.surfaceHighlight, borderRadius: 16, paddingInline: 14, paddingBlock: 10 }}>
+      <V style={{ flex: 1 }}>
+      <V style={{ background: C.surfaceHighlight, borderRadius: 16, paddingInline: 14, paddingBlock: 10 }}>
         <V style={row}>
           <T lines={1} style={{ ...urbanist(600), fontSize: 15, color: C.onSurface }}>{name}</T>
           {ai && (
@@ -100,6 +101,12 @@ function CommentBubble({ avatar, name, ai, children }: { avatar: ReactNode; name
           <T style={{ ...urbanist(500), fontSize: 13, color: C.onSurfaceMuted, marginLeft: 8 }}>now</T>
         </V>
         {children}
+      </V>
+      {/* React, under each comment */}
+      <V style={{ ...row, gap: 6, marginTop: 8, marginLeft: 4 }}>
+        <ThumbsUp size={14} color={C.onSurfaceMuted} />
+        <T style={{ ...urbanist(600), fontSize: 13, color: C.onSurfaceMuted }}>React</T>
+      </V>
       </V>
     </V>
   );
@@ -211,15 +218,18 @@ export function GoalDetailScreen({ state }: { state: GoalDetailState }) {
       <V style={{ position: "absolute", left: 0, right: 0, bottom: 0, paddingBottom: INSETS.bottom, background: C.surface, borderTop: `${HAIRLINE}px solid ${C.borderSubtle}`, zIndex: 5 }}>
         <V style={{ ...row, gap: 10, paddingInline: 16, paddingBlock: 10 }}>
           <Avatar member={4} />
-          <V style={{ flex: 1, minHeight: 40, borderRadius: 20, background: C.surfaceInput, justifyContent: "center", paddingInline: 16, paddingBlock: 8 }}>
-            {draft ? (
-              <T style={{ ...urbanist(400), fontSize: 15, lineHeight: "20px", color: C.onSurface }}>{draft}</T>
-            ) : (
-              <T style={{ ...urbanist(400), fontSize: 15, color: C.onSurfaceMuted }}>Add a comment</T>
-            )}
-          </V>
-          <V style={{ opacity: draft ? 1 : 0.4, transform: pressSend ? "scale(0.85)" : "scale(1)", transition: `opacity 0.3s ${EASE}, transform 0.2s ${EASE}` }}>
-            <Send size={20} color={C.primary} />
+          {/* the field holds the send arrow on its right, dim until there is text */}
+          <V style={{ flex: 1, ...row, minHeight: 42, borderRadius: 21, background: C.surfaceInput, paddingLeft: 16, paddingRight: 10, paddingBlock: 8, gap: 8 }}>
+            <V style={{ flex: 1 }}>
+              {draft ? (
+                <T style={{ ...urbanist(400), fontSize: 15, lineHeight: "20px", color: C.onSurface }}>{draft}</T>
+              ) : (
+                <T lines={1} style={{ ...urbanist(400), fontSize: 15, color: C.onSurfaceMuted }}>Add a comment (@ to mention)</T>
+              )}
+            </V>
+            <V style={{ opacity: draft ? 1 : 0.4, transform: pressSend ? "scale(0.85)" : "scale(1)", transition: `opacity 0.3s ${EASE}, transform 0.2s ${EASE}` }}>
+              <ArrowUp size={20} color={C.primary} strokeWidth={2.2} />
+            </V>
           </V>
         </V>
       </V>

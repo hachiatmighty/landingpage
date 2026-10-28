@@ -2,42 +2,55 @@ import type { ReactNode } from "react";
 import { ArrowLeft, BarChart2, Heart, MoreHorizontal, Plus, Target, type LucideIcon } from "lucide-react";
 import { MEMBERS } from "../../../lib/members";
 import { INSETS } from "./device";
-import { C, Fonts, HAIRLINE, row, urbanist } from "./theme";
+import { C, HAIRLINE, row, urbanist } from "./theme";
 import { T, V } from "./native";
 import { sim } from "./motion";
 import { Tap } from "./Tap";
 
-const MAX_CIRCLE = 5;
+/*
+ * screens/Main/ManageCircle.tsx on the My Circle tab, matched to a screenshot of the current app:
+ * a plain header with + on the right, underlined tabs, the Circle's size, Members (Invite someone,
+ * then each person) and the AI coaches with their taglines.
+ */
+
+const CIRCLE_LIMIT = 50;
+const GUTTER = 20;
+const MUTED = C.onSurfaceMuted;
 
 /* Representative members, not real people's handles. */
 const CIRCLE_MEMBERS = [
-  { name: "Rotimi Adeyemi", username: "@rotimi.runs", member: 0 },
-  { name: "Maya Bell", username: "@mayabell", member: 1 },
-  { name: "Tomi Okafor", username: "@tomi", member: 2 },
-  { name: "Jen Park", username: "@jenpark", member: 3 },
+  { name: "Rotimi Adeyemi", member: 0 },
+  { name: "Maya Bell", member: 1 },
+  { name: "Tomi Okafor", member: 2 },
+  { name: "Jen Park", member: 3 },
 ];
 
-/* Who joins during the simulated loop, filling the last spot. */
-const JOINING = { name: "Sade Bello", username: "@sade", member: 4 };
+/* Who joins during the simulated loop: someone invited by email, with no photo. */
+const JOINING = { name: "Dami", initial: "D" };
 
-/* The three AI coaches Premium includes, as named in the app's catalog. Subtitle is
-   coachSubtitle(): specialty and description joined with a middle dot. */
-const AI_COACHES: { name: string; subtitle: string; Icon: LucideIcon }[] = [
-  { name: "SPARTAN", subtitle: "General · I own this. Done. Next.", Icon: Target },
-  { name: "ORACLE", subtitle: "General · See what you couldn't see before.", Icon: BarChart2 },
-  { name: "BLOOM", subtitle: "General · Growth happens here.", Icon: Heart },
+/* The three AI coaches and their taglines, as the Circle screen shows them. */
+const AI_COACHES: { name: string; tagline: string; Icon: LucideIcon }[] = [
+  { name: "SPARTAN", tagline: "No excuses. Only excellence.", Icon: Target },
+  { name: "ORACLE", tagline: "See what you couldn't see before.", Icon: BarChart2 },
+  { name: "BLOOM", tagline: "Growth happens naturally here.", Icon: Heart },
 ];
 
-const SEPARATOR = `${HAIRLINE}px solid rgba(255,255,255,0.1)`;
-const nameStyle = { ...Fonts.textRegular, ...Fonts.textBold };
-const subtitleStyle = { ...Fonts.textSmall, opacity: 0.5 };
+const SEPARATOR = `${HAIRLINE}px solid ${C.borderSubtle}`;
+const nameStyle = { ...urbanist(500), fontSize: 16, color: C.onSurface };
+const subtitleStyle = { ...urbanist(400), fontSize: 14.5, color: MUTED, marginTop: 2 };
 
-/** components/UserRow.tsx inside ManageCircle's memberItem padding. */
-function MemberRow({ avatar, name, subtitle, action, border }: { avatar: ReactNode; name: ReactNode; subtitle: ReactNode; action?: ReactNode; border: boolean }) {
+const more = (
+  <V style={{ padding: 8 }}>
+    <MoreHorizontal size={20} color={MUTED} />
+  </V>
+);
+
+/** One row: a 42pt avatar, the name with an optional subtitle, and an optional action. */
+function MemberRow({ avatar, name, subtitle, action, border = true }: { avatar: ReactNode; name: ReactNode; subtitle?: ReactNode; action?: ReactNode; border?: boolean }) {
   return (
-    <V style={{ ...row, paddingBlock: 12, paddingInline: 16, borderBottom: border ? SEPARATOR : undefined }}>
+    <V style={{ ...row, gap: 13, height: 63, paddingInline: GUTTER, borderBottom: border ? SEPARATOR : undefined }}>
       {avatar}
-      <V style={{ flex: 1, marginLeft: 12 }}>
+      <V style={{ flex: 1 }}>
         {name}
         {typeof subtitle === "string" ? <T lines={1} style={subtitleStyle}>{subtitle}</T> : subtitle}
       </V>
@@ -46,128 +59,109 @@ function MemberRow({ avatar, name, subtitle, action, border }: { avatar: ReactNo
   );
 }
 
-const SectionLabel = ({ children }: { children: string }) => (
-  <T style={{ ...Fonts.textSmall, marginTop: 24, marginBottom: 12, fontWeight: 500, letterSpacing: 0.5, color: C.textGray400 }}>{children}</T>
-);
-
-const card = { background: C.inputBackground, borderRadius: 16, overflow: "hidden" } as const;
-const roundButton = { width: 44, height: 44, borderRadius: 22, background: C.inputBackground, alignItems: "center", justifyContent: "center" } as const;
-const more = (
-  <V style={{ padding: 8, minWidth: 44, minHeight: 44, alignItems: "center", justifyContent: "center" }}>
-    <MoreHorizontal size={20} color={C.textGray400} />
+const SectionHeading = ({ title, count }: { title: string; count: ReactNode }) => (
+  <V style={{ ...row, justifyContent: "space-between", paddingInline: GUTTER, marginTop: 30, marginBottom: 8 }}>
+    <T style={{ ...urbanist(700), fontSize: 20, color: C.onSurface }}>{title}</T>
+    {count}
   </V>
 );
 
-/** screens/Main/ManageCircle.tsx on the My Circle tab, for a Premium member with four people in. */
+/** A number that ticks over in the loop: the old value rises out as the new one rises in. */
+const Ticker = ({ from, to, style }: { from: string; to: string; style: object }) => (
+  <V style={{ overflow: "hidden" }}>
+    <T style={{ ...style, ...sim("rise-out") }}>{from}</T>
+    <T style={{ ...style, position: "absolute", left: 0, top: 0, ...sim("rise-in") }}>{to}</T>
+  </V>
+);
+
+/** The Circle screen. The loop taps Invite someone and Dami joins by email, so the counts tick over. */
 export function CircleScreen() {
-  const spotsLeft = MAX_CIRCLE - CIRCLE_MEMBERS.length;
+  const members = CIRCLE_MEMBERS.length;
 
   return (
     <V style={{ height: "100%", paddingTop: INSETS.top }}>
       {/* header */}
-      <V style={{ ...row, justifyContent: "space-between", paddingInline: 16, paddingBlock: 12 }}>
-        <V style={roundButton}>
-          <ArrowLeft size={24} color={C.textGray400} />
+      <V style={{ height: 70, justifyContent: "center", marginTop: 6 }}>
+        <V style={{ position: "absolute", left: 10, top: 0, bottom: 0, width: 44, justifyContent: "center", alignItems: "center" }}>
+          <ArrowLeft size={24} color={C.onSurface} />
         </V>
-        <V style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-          <T style={{ ...Fonts.textLarge, ...Fonts.textBold, fontSize: 28 }}>Circle</T>
-        </V>
-        <V style={roundButton}>
-          <Plus size={24} color={C.primary} strokeWidth={2.5} />
+        <T style={{ ...urbanist(600), fontSize: 18, color: C.onSurface, textAlign: "center" }}>Circle</T>
+        <V style={{ position: "absolute", right: 14, top: 0, bottom: 0, justifyContent: "center" }}>
+          <Plus size={26} color={C.onSurface} strokeWidth={2} />
         </V>
       </V>
 
-      <V style={{ padding: 30 }}>
-        {/* tab switcher. Widths are the app's own arithmetic, which leaves a few points spare at the end. */}
-        <V style={{ flexDirection: "row", background: C.inputBackground, borderRadius: 14, padding: 4, marginBottom: 16 }}>
-          <V style={{ position: "absolute", top: 4, left: 4, bottom: 4, width: 160, background: "rgba(255, 222, 89, 0.18)", borderRadius: 12 }} />
-          {[
-            { label: "My Circle", width: 160, active: true },
-            { label: "Circles I'm In", width: 161, active: false },
-          ].map((tab) => (
-            <V key={tab.label} style={{ width: tab.width, paddingBlock: 12, alignItems: "center", justifyContent: "center", borderRadius: 12 }}>
-              <T style={{ ...urbanist(tab.active ? 700 : 600), fontSize: 15, letterSpacing: 0.2, color: tab.active ? C.primary : C.textGray400 }}>{tab.label}</T>
-            </V>
-          ))}
+      {/* tabs */}
+      <V style={{ flexDirection: "row", gap: 24, paddingInline: GUTTER, borderBottom: SEPARATOR }}>
+        <V style={{ paddingBlock: 12 }}>
+          <T style={{ ...urbanist(600), fontSize: 16, color: C.onSurface }}>My Circle</T>
+          <V style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 2.5, borderRadius: 2, background: C.primary }} />
         </V>
+        <V style={{ paddingBlock: 12 }}>
+          <T style={{ ...urbanist(500), fontSize: 16, color: MUTED }}>Circles I'm in</T>
+        </V>
+      </V>
 
-        <T style={{ ...Fonts.textRegular, opacity: 0.6, marginTop: 8 }}>
-          Build your accountability circle with up to {MAX_CIRCLE} people. Upgrade to Premium Plus for up to 50 members.
-        </T>
+      <T style={{ ...urbanist(400), fontSize: 14.5, color: MUTED, paddingInline: GUTTER, marginTop: 22 }}>Build your accountability circle with up to {CIRCLE_LIMIT} people.</T>
 
-        <SectionLabel>MEMBERS</SectionLabel>
-        <V style={card}>
-          <MemberRow
-            border
-            avatar={
-              <V style={{ width: 48, height: 48, borderRadius: 24, background: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center" }}>
-                <Plus size={24} color={C.primary} strokeWidth={2.5} />
-              </V>
-            }
-            name={<T lines={1} style={nameStyle}>Invite someone</T>}
-            subtitle={
-              <V style={{ overflow: "hidden" }}>
-                <T style={{ ...subtitleStyle, ...sim("rise-out") }}>{`${spotsLeft} ${spotsLeft === 1 ? "spot" : "spots"} left`}</T>
-                <T style={{ ...subtitleStyle, position: "absolute", left: 0, top: 0, ...sim("rise-in") }}>Circle full</T>
-              </V>
-            }
-          />
-          {CIRCLE_MEMBERS.map((person, i) => (
-            <MemberRow
-              key={person.username}
-              border={i < CIRCLE_MEMBERS.length - 1}
-              avatar={
-                <V style={{ width: 48, height: 48, borderRadius: 24, overflow: "hidden", background: C.textGray400 }}>
-                  <img src={MEMBERS[person.member].src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </V>
-              }
-              name={<T lines={1} style={nameStyle}>{person.name}</T>}
-              subtitle={person.username}
-              action={more}
-            />
-          ))}
-          {/* Simulated loop: the invite is tapped and a fifth person joins. */}
-          <V style={{ overflow: "hidden", ...sim("expand") }}>
-            <V style={{ borderTop: SEPARATOR }}>
-              <MemberRow
-                border={false}
-                avatar={
-                  <V style={{ width: 48, height: 48, borderRadius: 24, overflow: "hidden", background: C.textGray400, ...sim("in-a") }}>
-                    <img src={MEMBERS[JOINING.member].src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  </V>
-                }
-                name={<T lines={1} style={nameStyle}>{JOINING.name}</T>}
-                subtitle={JOINING.username}
-                action={more}
-              />
-            </V>
+      <SectionHeading title="Members" count={<Ticker from={`${members}`} to={`${members + 1}`} style={{ ...urbanist(400), fontSize: 14, color: MUTED }} />} />
+      <MemberRow
+        avatar={
+          <V style={{ width: 42, height: 42, borderRadius: 21, background: C.surfaceInput, alignItems: "center", justifyContent: "center" }}>
+            <Plus size={20} color={C.primary} strokeWidth={2.4} />
           </V>
-          <Tap x={40} y={36} />
-        </V>
-
-        <SectionLabel>AI COACHES</SectionLabel>
-        <V style={card}>
-          {AI_COACHES.map((coach, i) => (
-            <MemberRow
-              key={coach.name}
-              border={i < AI_COACHES.length - 1}
-              avatar={
-                <V style={{ width: 48, height: 48, borderRadius: 24, background: C.primary, alignItems: "center", justifyContent: "center" }}>
-                  <coach.Icon size={24} color="#000" strokeWidth={2} />
-                </V>
-              }
-              name={
-                <V style={{ ...row, gap: 8 }}>
-                  <T lines={1} style={{ ...nameStyle, flexShrink: 1 }}>{coach.name}</T>
-                  <T style={{ fontSize: 12, fontWeight: 600, color: C.textGray400 }}>AI</T>
-                </V>
-              }
-              subtitle={coach.subtitle}
-              action={<V style={{ padding: 8 }}><MoreHorizontal size={20} color={C.textGray400} /></V>}
-            />
-          ))}
-        </V>
+        }
+        name={<T style={nameStyle}>Invite someone</T>}
+        subtitle={<Ticker from={`${CIRCLE_LIMIT - members} spots left`} to={`${CIRCLE_LIMIT - members - 1} spots left`} style={subtitleStyle} />}
+      />
+      <Tap x={41} y={INSETS.top + 6 + 70 + 44 + 46 + 61 + 31} />
+      {/* Simulated loop: the person invited by email joins at the top of the list. */}
+      <V style={{ overflow: "hidden", ...sim("expand") }}>
+        <MemberRow
+          avatar={
+            <V style={{ width: 42, height: 42, borderRadius: 21, background: "#8F8F8F", alignItems: "center", justifyContent: "center", ...sim("in-a") }}>
+              <T style={{ ...urbanist(600), fontSize: 17, color: C.white }}>{JOINING.initial}</T>
+            </V>
+          }
+          name={<T style={nameStyle}>{JOINING.name}</T>}
+          subtitle="Joined by email"
+          action={more}
+        />
       </V>
+      {CIRCLE_MEMBERS.map((person, i) => (
+        <MemberRow
+          key={person.name}
+          border={i < CIRCLE_MEMBERS.length - 1}
+          avatar={
+            <V style={{ width: 42, height: 42, borderRadius: 21, overflow: "hidden", background: C.textGray400 }}>
+              <img src={MEMBERS[person.member].src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </V>
+          }
+          name={<T lines={1} style={nameStyle}>{person.name}</T>}
+          action={more}
+        />
+      ))}
+
+      <SectionHeading title="AI coaches" count={<T style={{ ...urbanist(400), fontSize: 14, color: MUTED }}>{AI_COACHES.length}</T>} />
+      {AI_COACHES.map((coach, i) => (
+        <MemberRow
+          key={coach.name}
+          border={i < AI_COACHES.length - 1}
+          avatar={
+            <V style={{ width: 42, height: 42, borderRadius: 21, background: C.primary, alignItems: "center", justifyContent: "center" }}>
+              <coach.Icon size={20} color="#000" strokeWidth={2.2} />
+            </V>
+          }
+          name={
+            <V style={{ ...row, gap: 8 }}>
+              <T lines={1} style={nameStyle}>{coach.name}</T>
+              <T style={{ ...urbanist(600), fontSize: 12, color: MUTED, letterSpacing: 0.4 }}>AI</T>
+            </V>
+          }
+          subtitle={coach.tagline}
+          action={more}
+        />
+      ))}
     </V>
   );
 }
